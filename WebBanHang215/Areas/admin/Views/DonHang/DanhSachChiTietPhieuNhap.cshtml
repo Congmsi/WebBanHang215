@@ -1,0 +1,89 @@
+﻿@model WebBanHang215.Areas.admin.ViewModels.ChiTietPhieuNhapListViewModel
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "Danh sách chi tiết phiếu nhập";
+    Layout = "~/Areas/admin/Views/_LayoutAdmin.cshtml";
+   
+    string maPhieuNhap = Model.MaPhieuNhap;
+    int stt = 1;
+    }
+
+<div class="text-center my-4">
+    <h1 class="btn btn-success shadow px-4 py-2 rounded text-white fs-2">
+        Chi tiết phiếu nhập: @maPhieuNhap
+    </h1>
+</div>
+
+
+
+<table class="table">
+    <thead>
+        <tr class="table-info">
+            <th>STT</th>
+            <th>Mã phiếu nhập</th>       <!-- ✅ -->
+            <th>Mã chi tiết nhập</th>
+            <th>Tên sản phẩm</th>
+            <th>Số lượng</th>
+            <th>Đơn giá nhập</th>
+            <th>Thành tiền</th>
+            <th>Ngày nhập</th>
+            <th>Chức năng</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int mau = 0;
+            string mauSD = "table-primary";
+        }
+
+        @foreach (var item in Model.DanhSachChiTiet)
+        {
+            switch (mau % 4)
+            {
+                case 0: mauSD = "table-primary"; break;
+                case 1: mauSD = "table-warning"; break;
+                case 2: mauSD = "table-success"; break;
+                case 3: mauSD = "table-danger"; break;
+            }
+            mau++;
+
+            <tr class="@mauSD">
+                <td>@stt</td>
+                <td>@item.MaPhieuNhap</td>       
+                <td>@item.MaChiTietNk</td>
+                <td>@item.TenSp</td>
+                <td>@item.SoLuong</td>
+                <td>@item.DonGiaNhap.ToString("N0")</td>
+                <td>@(item.SoLuong * item.DonGiaNhap) </td>
+                <td>@item.NgayNhap.ToString("dd/MM/yyyy")</td>
+                <td>
+                    <a class="btn btn-sm btn-warning" asp-action="SuaChiTietPhieuNhap" asp-route-id="@item.MaChiTietNk">Sửa</a>
+                    <a class="btn btn-sm btn-info" asp-action="XemChiTietPhieuNhap" asp-route-id="@item.MaChiTietNk">Xem</a>
+                    <form asp-action="XoaChiTietPhieuNhap" asp-controller="DonHang" asp-area="admin" method="post"
+                          onsubmit="return confirm('Bạn có chắc chắn muốn xóa dòng chi tiết này không?');" style="display:inline">
+                        <input type="hidden" name="id" value="@item.MaChiTietNk" />
+                        <button type="submit" class="btn btn-link text-danger p-0">Xóa</button>
+                    </form>
+                </td>
+            </tr>
+            stt++;
+        }
+    </tbody>
+</table>
+
+<div class="product__pagination text-center mt-4">
+    @Html.PagedListPager(Model.DanhSachChiTiet, page => Url.Action("DanhSachChiTietPhieuNhap", new { page, maPhieuNhap }),
+            new PagedListRenderOptions
+    {
+        DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+        DisplayLinkToNextPage = PagedListDisplayMode.Always,
+        UlElementClasses = new[] { "pagination" },
+        LiElementClasses = new[] { "page-item" },
+        PageClasses = new[] { "page-link" }
+    })
+</div>
+
+<a asp-action="DanhSachPhieuNhap" class="btn btn-secondary">← Quay lại danh sách phiếu nhập</a>

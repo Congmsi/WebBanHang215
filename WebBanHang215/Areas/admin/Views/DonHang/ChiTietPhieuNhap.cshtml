@@ -1,0 +1,42 @@
+﻿@model WebBanHang215.Areas.admin.ViewModels.ChiTietPhieuNhapViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "chi tiết phiếu nhập";
+    Layout = "~/Areas/admin/Views/_LayoutAdmin.cshtml";
+}
+
+<h2 class="text-center mb-4">Thêm chi tiết phiếu nhập</h2>
+
+<form asp-action="ChiTietPhieuNhap" asp-controller="DonHang" asp-area="admin" method="post" class="w-75 mx-auto">
+    @Html.AntiForgeryToken()
+
+    <div class="mb-3">
+        <label asp-for="MaPhieuNhap" class="form-label"></label>
+        <input asp-for="MaPhieuNhap" class="form-control" readonly />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MaSp" class="form-label"></label>
+        <select asp-for="MaSp" asp-items="ViewBag.DanhSachSanPham" class="form-select"></select>
+        <span asp-validation-for="MaSp" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="SoLuongNhap" class="form-label"></label>
+        <input asp-for="SoLuongNhap" class="form-control" />
+        <span asp-validation-for="SoLuongNhap" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="DonGiaNhap" class="form-label"></label>
+        <input asp-for="DonGiaNhap" class="form-control" />
+        <span asp-validation-for="DonGiaNhap" class="text-danger"></span>
+    </div>
+
+    
+</form>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

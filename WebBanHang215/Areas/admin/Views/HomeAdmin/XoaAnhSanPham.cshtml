@@ -1,0 +1,37 @@
+﻿@model WebBanHang215.ViewModels.XoaAnhSanPhamViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Xác nhận xóa ảnh sản phẩm";
+    Layout = "~/Areas/admin/Views/_LayoutAdmin.cshtml";
+}
+
+<h2 class="text-danger fw-bold mb-4">Xác nhận xóa ảnh sản phẩm</h2>
+
+<div class="alert alert-warning">
+    Bạn có chắc chắn muốn xóa ảnh sản phẩm này không?
+</div>
+
+<div class="mb-3">
+    <strong>Tên sản phẩm:</strong> @Model.TenSp
+</div>
+
+<div class="mb-3">
+    @if (!string.IsNullOrEmpty(Model.Url))
+    {
+        <img src="@Model.Url" alt="Ảnh sản phẩm" class="img-thumbnail" style="max-height: 250px;" />
+
+    }
+    else
+    {
+        <p class="text-muted">Không có ảnh hiển thị.</p>
+    }
+</div>
+
+<form asp-action="XoaAnhSanPham" asp-area="admin" asp-controller="HomeAdmin" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="MaAnh" />
+    <input type="hidden" asp-for="MaSp" />
+
+    <button type="submit" class="btn btn-danger me-2">🗑️ Xác nhận xóa</button>
+    <a asp-action="DanhMucAnhSanPham" asp-route-id="@Model.MaSp" class="btn btn-secondary">Quay lại</a>
+</form>

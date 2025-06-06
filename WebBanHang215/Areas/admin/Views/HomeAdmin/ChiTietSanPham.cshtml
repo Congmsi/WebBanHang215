@@ -1,0 +1,67 @@
+﻿@model WebBanHang215.ViewModels.SanPhamChiTietViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Chi tiết sản phẩm";
+    Layout = "~/Areas/admin/Views/_LayoutAdmin.cshtml";
+}
+
+<h2 class="text-danger fw-bold mb-3">Chi tiết sản phẩm</h2>
+
+<div class="mb-4">
+    <h4 class="text-primary">Thông tin sản phẩm:</h4>
+    <p><strong>Tên sản phẩm:</strong> @Model.TenSp</p>
+    <p><strong>Mô tả:</strong> @Model.MoTa</p>
+    <p><strong>Giá bán:</strong> @Model.Gia?.ToString("N0") VNĐ</p>
+    <p><strong>Giá khuyến mãi:</strong> @Model.GiaKhuyenMai?.ToString("N0") VNĐ</p>
+    <p><strong>Loại:</strong> @Model.TenLoai</p>
+    <p><strong>Hãng:</strong> @Model.TenHang</p>
+    <p><strong>Giới tính:</strong> @Model.TenGioiTinh</p>
+    <p><strong>Trạng thái:</strong> @Model.TenTrangThai</p>
+    <p><strong>Nhà cung cấp:</strong> @Model.TenNcc</p>
+</div>
+
+<div class="mb-4">
+    <h4 class="text-primary">Hình ảnh:</h4>
+    <div class="d-flex flex-wrap gap-2">
+        @if (Model.UrlAnh != null && Model.UrlAnh.Any())
+        {
+            foreach (var url in Model.UrlAnh)
+            {
+                <img src="@url" alt="Ảnh sản phẩm" class="img-thumbnail" style="width: 120px;" />
+            }
+        }
+        else
+        {
+            <p>Không có ảnh.</p>
+        }
+    </div>
+</div>
+
+<div class="mt-4">
+    <h5>Chi tiết size – màu – tồn kho</h5>
+    <table class="table table-bordered">
+        <thead class="table-info text-center">
+            <tr>
+                <th>Size</th>
+                <th>Màu</th>
+                <th>Số lượng tồn</th>
+                <th>Ngày nhập</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ct in Model.ChiTietSanPham)
+            {
+                <tr class="text-center">
+                    <td>@ct.TenSize</td>
+                    <td>@ct.TenMau</td>
+                    <td>@ct.SoLuongTon</td>
+                    <td>@ct.NgayNhap?.ToString("dd/MM/yyyy")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="text-end mt-3">
+    <a asp-action="DanhMucSanPham" asp-area="admin" asp-controller="HomeAdmin" class="btn btn-secondary">Quay lại</a>
+</div>

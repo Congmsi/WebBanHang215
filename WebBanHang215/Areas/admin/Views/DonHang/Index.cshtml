@@ -1,0 +1,167 @@
+﻿@*@model X.PagedList.IPagedList<WebBanHang215.Models.DonHang>
+@using X.PagedList.Mvc.Core
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "Danh sách đơn hàng";
+    Layout = "~/Areas/admin/Views/_LayoutAdmin.cshtml";
+    int stt = (Model.PageNumber - 1) * Model.PageSize + 1;
+}
+
+<h2 class="text-center my-4">Danh sách đơn hàng</h2>
+<p>
+    <a asp-area="admin" asp-controller="DonHang" asp-action="ThemDonHang">Create New</a>
+</p>
+<table class="table w-100">
+    <thead>
+        <tr class="table-success">
+            <th>STT</th>
+            <th>Mã đơn</th>
+            <th>Tổng Tiền</th>
+            <th>Người đặt hàng</th>
+            <th>Ngày đặt</th>
+            <th>Trạng thái</th>
+            <th colspan="4" class="text-center">Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            string MauDHSD = "table-success";
+            int MauDH = 0;
+        }
+
+        @foreach (var don in Model)
+        {
+            switch (MauDH % 4)
+            {
+                case 0: MauDHSD = "table-primary"; break;
+                case 1: MauDHSD = "table-warning"; break;
+                case 2: MauDHSD = "table-success"; break;
+                case 3: MauDHSD = "table-danger"; break;
+            }
+            MauDH++;
+
+            <tr class="@MauDHSD">
+                <td>@stt</td>
+                <td>@don.MaDh</td>
+                <td>@don.TongTien?.ToString("N0")</td>
+                <td>@(don.MaNdNavigation?.TenDangNhap ?? "Không rõ")</td>
+                <td>@don.NgayDatHang?.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>@don.TrangThai</td>
+               
+                <td>
+                    <a asp-area="admin" asp-controller="DonHang" asp-action="SuaDonHang" asp-route-id="@don.MaDh" class="btn btn-warning">Edit</a>
+                </td>
+                <td>
+                    <a asp-area="admin" asp-controller="DonHang" asp-action="XoaDonHang" asp-route-id="@don.MaDh" class="btn btn-danger">Delete</a>
+                </td>
+                <td>
+                    <a asp-area="admin" asp-controller="DonHang" asp-action="XemChiTietDonHang" asp-route-id="@don.MaDh" class="btn btn-info">Detail</a>
+                </td>
+            </tr>
+            stt++;
+        }
+    </tbody>
+</table>
+
+<div class="product__pagination text-center mt-4">
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }),
+            new PagedListRenderOptions
+    {
+        DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+        DisplayLinkToNextPage = PagedListDisplayMode.Always,
+        UlElementClasses = new[] { "pagination justify-content-center" },
+        LiElementClasses = new[] { "page-item" },
+        PageClasses = new[] { "page-link" }
+    })
+</div>*@
+
+
+@model X.PagedList.IPagedList<WebBanHang215.Models.DonHang>
+@using X.PagedList.Mvc.Core
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "Danh sách đơn hàng";
+    Layout = "~/Areas/admin/Views/_LayoutAdmin.cshtml";
+    int stt = (Model.PageNumber - 1) * Model.PageSize + 1;
+}
+
+<h2 class="text-center my-4">Danh sách đơn hàng</h2>
+<p>
+    <a asp-area="admin" asp-controller="DonHang" asp-action="ThemDonHang" class="btn btn-primary">Tạo đơn hàng mới</a>
+</p>
+
+<table class="table table-bordered table-hover">
+    <thead class="table-success text-center">
+        <tr>
+            <th>STT</th>
+            <th>Mã đơn</th>
+            <th>Tổng tiền</th>
+            <th>Người đặt</th>
+            <th>Ngày đặt</th>
+            <th>Trạng thái đơn</th>
+            <th>Địa chỉ giao</th>
+            <th>Hình thức thanh toán</th>
+            <th>Trạng thái thanh toán</th>
+            <th>Giao dự kiến</th>
+            <th>Giao thực tế</th>
+            <th colspan="3" class="text-center">Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            string MauDHSD = "table-primary";
+            int MauDH = 0;
+        }
+
+        @foreach (var don in Model)
+        {
+            switch (MauDH % 4)
+            {
+                case 0: MauDHSD = "table-primary"; break;
+                case 1: MauDHSD = "table-warning"; break;
+                case 2: MauDHSD = "table-success"; break;
+                case 3: MauDHSD = "table-danger"; break;
+            }
+            MauDH++;
+
+            <tr class="@MauDHSD text-center align-middle">
+                <td>@stt</td>
+                <td>@don.MaDh</td>
+                <td>@don.TongTien?.ToString("N0")</td>
+                <td>@(don.MaNdNavigation?.TenDangNhap ?? "Không rõ")</td>
+                <td>@don.NgayDatHang?.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>@don.TrangThai</td>
+                <td>@don.DiaChiGiaoHang</td>
+                <td>@don.HinhThucThanhToan</td>
+                <td>@don.TrangThaiThanhToan</td>
+                <td>@don.NgayGiaoDuKien?.ToString("dd/MM/yyyy")</td>
+                <td>@don.NgayGiaoThucTe?.ToString("dd/MM/yyyy")</td>
+
+                <td>
+                    <a asp-area="admin" asp-controller="DonHang" asp-action="SuaDonHang" asp-route-id="@don.MaDh" class="btn btn-warning btn-sm">Edit</a>
+                </td>
+                <td>
+                    <a asp-area="admin" asp-controller="DonHang" asp-action="XoaDonHang" asp-route-id="@don.MaDh" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+                <td>
+                    <a asp-area="admin" asp-controller="DonHang" asp-action="XemChiTietDonHang" asp-route-id="@don.MaDh" class="btn btn-info btn-sm">Detail</a>
+                </td>
+            </tr>
+            stt++;
+        }
+    </tbody>
+</table>
+
+<div class="product__pagination text-center mt-4">
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }),
+            new PagedListRenderOptions
+    {
+        DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+        DisplayLinkToNextPage = PagedListDisplayMode.Always,
+        UlElementClasses = new[] { "pagination justify-content-center" },
+        LiElementClasses = new[] { "page-item" },
+        PageClasses = new[] { "page-link" }
+    })
+</div>

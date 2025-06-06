@@ -1,0 +1,82 @@
+﻿@model WebBanHang215.Areas.admin.ViewModels.TonKhoFilterViewModel
+@using X.PagedList.Mvc.Core
+@using X.PagedList
+
+@{
+    ViewData["Title"] = "Thống kê tồn kho";
+    Layout = "~/Areas/admin/Views/TonKho/_LayoutLocTonKho.cshtml";
+    int stt = (Model.KetQua.PageNumber - 1) * Model.KetQua.PageSize + 1;
+}
+
+@section TonKhoFilterSidebar {
+    <form method="get" asp-area="admin" asp-controller="TonKho" asp-action="ThongKeTonKhoFilter">
+        <!-- Mã sản phẩm -->
+        <div class="border-bottom mb-4 pb-4">
+            <h5 class="font-weight-semi-bold mb-3">Mã sản phẩm</h5>
+            <input type="text" name="maSp" value="@Model.MaSp" class="form-control mb-2 w-100" placeholder="Nhập mã sản phẩm..." />
+        </div>
+
+        <!-- Tên sản phẩm -->
+        <div class="border-bottom mb-4 pb-4">
+            <h5 class="font-weight-semi-bold mb-3">Tên sản phẩm</h5>
+            <input type="text" name="tenSp" value="@Model.TenSp" class="form-control mb-2 w-100" placeholder="Nhập tên sản phẩm..." />
+        </div>
+
+        <!-- Khoảng tồn kho -->
+        <div class="border-bottom mb-4 pb-4">
+            <h5 class="font-weight-semi-bold mb-3">Tồn kho</h5>
+            <input type="number" name="tonTu" value="@Model.TonKhoTu" class="form-control mb-2 w-100" placeholder="Từ..." />
+            <input type="number" name="tonDen" value="@Model.TonKhoDen" class="form-control mb-2 w-100" placeholder="Đến..." />
+        </div>
+
+        <div class="text-start mt-3">
+            <button type="submit" class="btn btn-primary">Lọc tồn kho</button>
+        </div>
+    </form>
+}
+
+<table class="table table-bordered text-center">
+    <thead class="table-success">
+        <tr>
+            <th>STT</th>
+            <th>Mã SP</th>
+            <th>Tên SP</th>
+            <th>Số lượng nhập</th>
+            <th>Số lượng bán</th>
+            <th class="text-danger">Tồn kho</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.KetQua)
+        {
+            <tr>
+                <td>@stt</td>
+                <td>@item.MaSp</td>
+                <td>@item.TenSp</td>
+                <td>@item.TongNhap</td>
+                <td>@item.TongBan</td>
+                <td class="fw-bold text-danger">@item.TonKho</td>
+            </tr>
+            stt++;
+        }
+    </tbody>
+</table>
+
+<div class="text-center mt-4">
+    @Html.PagedListPager(Model.KetQua, page => Url.Action("ThongKeTonKho", new
+        {
+            page,
+            maSp = Model.MaSp,
+            tenSp = Model.TenSp,
+            tonTu = Model.TonKhoTu,
+            tonDen = Model.TonKhoDen
+        }), new PagedListRenderOptions
+{
+    DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+    DisplayLinkToNextPage = PagedListDisplayMode.Always,
+    UlElementClasses = new[] { "pagination justify-content-center" },
+    LiElementClasses = new[] { "page-item" },
+    PageClasses = new[] { "page-link" }
+})
+</div>
+

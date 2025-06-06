@@ -1,0 +1,89 @@
+﻿@model X.PagedList.IPagedList<WebBanHang215.Models.SanPham>
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+
+@{
+    ViewData["Title"] = "DanhMucSanPham";
+    Layout = "~/Areas/admin/Views/_LayoutAdmin.cshtml";
+    int stt = (Model.PageNumber - 1) * Model.PageSize + 1; // STT liên tục
+}
+
+<div class="text-center my-4">
+    <h1 class="btn btn-primary shadow px-4 py-2 rounded text-white fs-2">
+        Danh mục các sản phẩm
+    </h1>
+</div>
+<p>
+    <a asp-action="ThemSanPhamMoi">Create New</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr class="table-success">
+            <th>STT</th>
+            <th>@Html.DisplayNameFor(model => model[0].TenSp)</th>
+            <th>@Html.DisplayNameFor(model => model[0].MoTa)</th>
+            <th>@Html.DisplayNameFor(model => model[0].Gia)</th>
+            <th>@Html.DisplayNameFor(model => model[0].GiaNhap)</th>
+            <th>@Html.DisplayNameFor(model => model[0].GiaKhuyenMai)</th>
+            <th>@Html.DisplayNameFor(model => model[0].SoLuongNhap)</th>
+            <th>Chức năng</th>
+        </tr>
+
+    </thead>
+    <tbody>
+        @{
+            int Mau = 0;
+            string @MauSD = "table-success";
+        }
+        @foreach (var item in Model)
+        {
+            // su dung moi mau cho 1 dong
+            switch (Mau % 4)
+            {
+                case 0:
+                    MauSD = "table-primary"; break;
+                case 1:
+                    MauSD = "table-warning"; break;
+                case 2:
+                    MauSD = "table-success"; break;
+                case 3:
+                    MauSD = "table-danger"; break;
+            }
+            Mau++;
+            <tr class="@MauSD">
+                <td>@stt</td>
+                <td>@Html.DisplayFor(modelItem => item.TenSp)</td>
+                <td>@Html.DisplayFor(modelItem => item.MoTa)</td>
+                <td>@Html.DisplayFor(modelItem => item.Gia)</td>
+                <td>@Html.DisplayFor(modelItem => item.GiaNhap)</td>
+                <td>@Html.DisplayFor(modelItem => item.GiaKhuyenMai)</td>
+                <td>@Html.DisplayFor(modelItem => item.SoLuongNhap)</td>
+                <td>
+                    <a asp-action="SuaSanPham" asp-route-id="@item.MaSp">Edit</a> |
+                    <a asp-action="ChiTietSanPham" asp-route-id="@item.MaSp">Details</a> |
+                    <a asp-action="XoaSanPham" asp-route-id="@item.MaSp">Delete</a>
+                    <a class="btn btn-sm btn-warning" asp-action="ThemAnhSanPham" asp-route-id="@item.MaSp">Thêm ảnh</a>
+                    <!-- Đúng: Gọi đến danh sách ảnh sản phẩm -->
+                    <a class="btn btn-sm btn-warning" asp-action="DanhSachAnhSanPham" asp-route-id="@item.MaSp">XoaAnh</a>
+
+                </td>
+            </tr>
+            stt++;
+        }
+    </tbody>
+</table>
+<div class="product__pagination text-center mt-4">
+    @Html.PagedListPager(Model, page => Url.Action("DanhMucSanPham", new { page }),
+            new PagedListRenderOptions
+    {
+        DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+        DisplayLinkToNextPage = PagedListDisplayMode.Always,
+        UlElementClasses = new[] { "pagination" },
+        LiElementClasses = new[] { "page-item" },
+        PageClasses = new[] { "page-link" }
+    })
+</div>
+

@@ -1,0 +1,42 @@
+﻿
+@{
+    ViewData["Title"] = "SanPhamTheoLoai";
+    Layout = "~/Views/Shared/_LayoutOgani.cshtml";
+}
+
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@model IPagedList<WebBanHang215.Models.SanPham>
+
+
+@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_LayoutOgani.cshtml";
+}
+
+<section class="featured spad">
+    <div class="container">
+        <div class="row featured__filter">
+            @foreach (var item in Model)
+            {
+                @await Html.PartialAsync("PartialSanPham", item)
+            }
+        </div>
+
+        <!-- PHÂN TRANG -->
+        <div class="product__pagination text-center mt-4">
+            @Html.PagedListPager(Model, page => Url.Action("SanPhamTheoLoai", new { maLoai = ViewBag.maLoai, page }),
+
+                     new PagedListRenderOptions
+            {
+                DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                DisplayLinkToNextPage = PagedListDisplayMode.Always,
+                UlElementClasses = new[] { "pagination" },
+                LiElementClasses = new[] { "page-item" },
+                PageClasses = new[] { "page-link" }
+            })
+        </div>
+
+    </div>
+</section>
+

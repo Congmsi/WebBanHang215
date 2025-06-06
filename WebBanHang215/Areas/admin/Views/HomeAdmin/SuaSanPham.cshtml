@@ -1,0 +1,80 @@
+﻿@model WebBanHang215.ViewModels.SanPhamEditViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Sửa sản phẩm";
+    Layout = "~/Areas/admin/Views/_LayoutAdmin.cshtml";
+}
+
+<h2 class="text-center mb-4">Sửa sản phẩm</h2>
+
+<form asp-action="SuaSanPham" asp-controller="HomeAdmin" asp-area="admin" method="post" class="w-75 mx-auto">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="MaSp" />
+
+    <div class="mb-3">
+        <label asp-for="TenSp" class="form-label"></label>
+        <input asp-for="TenSp" class="form-control" />
+        <span asp-validation-for="TenSp" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MoTa" class="form-label"></label>
+        <textarea asp-for="MoTa" class="form-control"></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Gia" class="form-label"></label>
+        <input asp-for="Gia" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="GiaNhap" class="form-label"></label>
+        <input asp-for="GiaNhap" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="GiaKhuyenMai" class="form-label"></label>
+        <input asp-for="GiaKhuyenMai" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="SoLuongNhap" class="form-label"></label>
+        <input asp-for="SoLuongNhap" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MaLoai" class="form-label"></label>
+        <select asp-for="MaLoai" asp-items="ViewBag.MaLoai" class="form-select"></select>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MaHang" class="form-label"></label>
+        <select asp-for="MaHang" asp-items="ViewBag.MaHang" class="form-select"></select>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MaNcc" class="form-label"></label>
+        <select asp-for="MaNcc" asp-items="ViewBag.MaNcc" class="form-select"></select>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MaTrangThai" class="form-label"></label>
+        <select asp-for="MaTrangThai" asp-items="ViewBag.MaTrangThai" class="form-select"></select>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MaGioiTinh" class="form-label"></label>
+        <select asp-for="MaGioiTinh" asp-items="ViewBag.MaGioiTinh" class="form-select"></select>
+    </div>
+
+    <div class="text-center">
+        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+        <a asp-action="DanhMucSanPham" class="btn btn-secondary">Quay lại</a>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

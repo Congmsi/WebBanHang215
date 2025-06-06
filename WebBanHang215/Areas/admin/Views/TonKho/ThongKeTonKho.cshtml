@@ -1,0 +1,67 @@
+﻿@model IPagedList<WebBanHang215.Areas.admin.ViewModels.TonKhoViewModel>
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "Thống kê tồn kho";
+    Layout = "~/Areas/admin/Views/_LayoutAdmin.cshtml";
+    int stt = (Model.PageNumber - 1) * Model.PageSize + 1;
+}
+
+<div class="text-center my-4">
+    <h1 class="btn btn-info shadow px-4 py-2 rounded text-white fs-2">
+        THỐNG KÊ TỒN KHO SẢN PHẨM
+    </h1>
+</div>
+
+<table class="table text-center">
+    <thead class="table-success">
+        <tr>
+            <th>STT</th>
+            <th>Mã SP</th>
+            <th>Tên sản phẩm</th>
+            <th>Số lượng nhập</th>
+            <th>Số lượng bán</th>
+            <th class="text-danger">Tồn kho</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int mau = 0;
+            string mauSD = "table-success";
+        }
+        @foreach (var item in Model)
+        {
+            switch (mau % 4)
+            {
+                case 0: mauSD = "table-primary"; break;
+                case 1: mauSD = "table-warning"; break;
+                case 2: mauSD = "table-success"; break;
+                case 3: mauSD = "table-danger"; break;
+            }
+            mau++;
+            <tr class="@mauSD">
+                <td>@stt</td>
+                <td>@item.MaSp</td>
+                <td>@item.TenSp</td>
+                <td>@item.TongNhap</td>
+                <td>@item.TongBan</td>
+                <td class="fw-bold text-danger">@item.TonKho</td>
+            </tr>
+            stt++;
+        }
+    </tbody>
+</table>
+
+<div class="product__pagination text-center mt-4">
+    @Html.PagedListPager(Model, page => Url.Action("ThongKeTonKho", new { page }),
+            new PagedListRenderOptions
+    {
+        DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+        DisplayLinkToNextPage = PagedListDisplayMode.Always,
+        UlElementClasses = new[] { "pagination" },
+        LiElementClasses = new[] { "page-item" },
+        PageClasses = new[] { "page-link" }
+    })
+</div>

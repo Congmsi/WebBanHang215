@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>@ViewData["Title"] - Quản lý phiếu nhập</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <link rel="icon" href="~/ALayoutLoc/img/favicon.ico">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="~/ALayoutLoc/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="~/ALayoutLoc/css/style.css" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="container-fluid">
+        <div class="row bg-secondary py-2 px-xl-5">
+            <div class="col-lg-6 d-none d-lg-block">
+                <div class="d-inline-flex align-items-center text-white">
+                    <small class="mr-3"><i class="fa fa-phone-alt mr-2"></i>+84 123 456 789</small>
+                    <small><i class="fa fa-envelope mr-2"></i>admin@congshop.vn</small>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center text-lg-right text-white">
+                <div class="d-inline-flex align-items-center">
+                    <a class="text-white px-2" href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a class="text-white px-2" href="#"><i class="fab fa-instagram"></i></a>
+                    <a class="text-white px-2" href="#"><i class="fas fa-user-alt"></i> Admin</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row align-items-center py-3 px-xl-5">
+            <div class="col-lg-3">
+                <a href="/" class="text-decoration-none">
+                    <span class="h1 text-uppercase text-primary bg-dark px-2">Cong</span>
+                    <span class="h1 text-uppercase text-dark bg-primary px-2 ml-n1">Shop</span>
+                </a>
+            </div>
+            <div class="col-lg-6 col-6 text-left">
+                
+            </div>
+            <div class="col-lg-3 col-6 text-right">
+               
+            </div>
+        </div>
+    </div>
+
+    <!-- Banner title -->
+    <!--   <div class="container-fluid bg-secondary mb-5">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 100px;">
+            <h1 class="font-weight-semi-bold text-uppercase mb-3 text-white">Thống kê phiếu nhập</h1>
+            <div class="d-inline-flex">
+                <p class="m-0 text-white"><a href="/" class="text-white">Trang chủ</a></p>
+                <p class="m-0 px-2 text-white">-</p>
+                <p class="m-0 text-white">Lọc phiếu nhập</p>
+            </div>
+        </div>
+    </div>  -->
+
+    <div class="container-fluid bg-secondary mb-5">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 100px;">
+            <h1 class="font-weight-semi-bold text-uppercase mb-3 text-dark">Thống kê phiếu nhập</h1>
+            <div class="d-inline-flex">
+                <p class="m-0 text-dark"><a href="/" class="text-dark">Trang chủ</a></p>
+                <p class="m-0 px-2 text-dark">-</p>
+                <p class="m-0 text-dark">Lọc phiếu nhập</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="container-fluid pt-5">
+        <div class="row px-xl-5">
+            <!-- Sidebar bộ lọc -->
+            <div class="col-lg-3">
+                @RenderSection("PhieuNhapFilterSidebar", required: false)
+            </div>
+
+            <!-- Kết quả -->
+            <div class="col-lg-9">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+    <!-- Scroll top -->
+    <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+    <!-- JS scripts -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="~/ALayoutLoc/lib/easing/easing.min.js"></script>
+    <script src="~/ALayoutLoc/lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="~/ALayoutLoc/mail/jqBootstrapValidation.min.js"></script>
+    <script src="~/ALayoutLoc/mail/contact.js"></script>
+    <script src="~/ALayoutLoc/js/main.js"></script>
+
+</body>
+</html>
+

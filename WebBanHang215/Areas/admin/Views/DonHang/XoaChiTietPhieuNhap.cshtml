@@ -1,0 +1,38 @@
+﻿@model WebBanHang215.Models.ChiTietNhapKho
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "Xóa chi tiết phiếu nhập";
+    Layout = "~/Areas/admin/Views/_LayoutAdmin.cshtml";
+}
+
+<div class="text-center my-4">
+    <h2 class="text-danger">Xác nhận xóa chi tiết phiếu nhập</h2>
+</div>
+
+<div class="card p-4 shadow">
+    <dl class="row">
+        <dt class="col-sm-4">Mã chi tiết nhập</dt>
+        <dd class="col-sm-8">@Model.MaChiTietNk</dd>
+
+        <dt class="col-sm-4">Mã phiếu nhập</dt>
+        <dd class="col-sm-8">@Model.MaPhieuNhap</dd>
+
+        <dt class="col-sm-4">Mã sản phẩm</dt>
+        <dd class="col-sm-8">@Model.MaSp</dd>
+
+        <dt class="col-sm-4">Số lượng</dt>
+        <dd class="col-sm-8">@Model.SoLuong</dd>
+
+        <dt class="col-sm-4">Đơn giá nhập</dt>
+        <dd class="col-sm-8">@Model.DonGiaNhap.ToString("N0")</dd>
+    </dl>
+
+    <form asp-action="XoaChiTietPhieuNhap" method="post">
+        <input type="hidden" name="id" value="@Model.MaChiTietNk" />
+        <div class="d-flex justify-content-between mt-4">
+            <a asp-action="DanhSachChiTietPhieuNhap" asp-route-maPhieuNhap="@Model.MaPhieuNhap" class="btn btn-secondary">← Hủy</a>
+            <button type="submit" class="btn btn-danger">🗑️ Xóa</button>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,45 @@
+﻿@model WebBanHang215.Areas.admin.ViewModels.ChiTietDonHangEditViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "Sửa chi tiết đơn hàng";
+    Layout = "~/Areas/admin/Views/_LayoutAdmin.cshtml";
+}
+
+<h2 class="text-center text-warning mb-4">Sửa chi tiết sản phẩm</h2>
+
+<form asp-action="SuaChiTietDonHang" method="post" class="container">
+    <input type="hidden" asp-for="MaChiTiet" />
+    <input type="hidden" asp-for="MaDh" />
+
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="MaSp" class="form-label">Sản phẩm</label>
+        <select asp-for="MaSp" class="form-control" asp-items="ViewBag.DanhSachSanPham"></select>
+        <span asp-validation-for="MaSp" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="SoLuong" class="form-label"></label>
+        <input asp-for="SoLuong" class="form-control" />
+        <span asp-validation-for="SoLuong" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Đơn giá</label>
+        <input class="form-control" value="@Model.DonGia.ToString("N0") VNĐ" readonly />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Thành tiền</label>
+        <input class="form-control" value="@(Model.ThanhTien.ToString("N0")) VNĐ" readonly />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Cập nhật</button>
+    <a asp-action="XemChiTietDonHang" asp-route-id="@Model.MaDh" class="btn btn-secondary ms-2">Quay lại</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

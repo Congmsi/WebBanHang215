@@ -1,0 +1,100 @@
+﻿@model WebBanHang215.Areas.admin.ViewModels.NhapKhoCreateViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "Thêm phiếu nhập kho";
+    Layout = "~/Areas/admin/Views/_LayoutAdmin.cshtml";
+}
+
+<div class="text-center my-4">
+    <h1 class="btn btn-primary shadow px-4 py-2 rounded text-white fs-2">
+        Thêm phiếu nhập kho
+    </h1>
+</div>
+
+<form asp-action="ThemPhieuNhap" method="post">
+    <div class="form-group mb-3">
+        <label asp-for="MaPhieuNhap" class="form-label"></label>
+        <input asp-for="MaPhieuNhap" class="form-control" />
+        <span asp-validation-for="MaPhieuNhap" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="MaNcc" class="form-label">Nhà cung cấp</label>
+        <select asp-for="MaNcc" asp-items="Model.NhaCungCapList" class="form-control">
+            <option value="">-- Chọn nhà cung cấp --</option>
+        </select>
+        <span asp-validation-for="MaNcc" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="GhiChu" class="form-label">Ghi chú</label>
+        <textarea asp-for="GhiChu" class="form-control"></textarea>
+    </div>
+
+    <h4 class="mt-4">Chi tiết sản phẩm nhập</h4>
+    <table class="table table-bordered" id="chiTietNhapTable">
+        <thead class="table-success">
+            <tr>
+                <th>Sản phẩm</th>
+                <th>Số lượng</th>
+                <th>Đơn giá nhập</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.ChiTietNhap.Count; i++)
+            {
+                <tr>
+                    <td>
+                        <select asp-for="ChiTietNhap[@i].MaSp" asp-items="Model.SanPhamList" class="form-control"></select>
+                    </td>
+                    <td>
+                        <input asp-for="ChiTietNhap[@i].SoLuong" class="form-control" />
+                    </td>
+                    <td>
+                        <input asp-for="ChiTietNhap[@i].DonGiaNhap" class="form-control" />
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="removeRow(this)">Xóa</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <button type="button" class="btn btn-secondary" onclick="addRow()">+ Thêm dòng</button>
+
+    <div class="form-group mt-4">
+        <button type="submit" class="btn btn-primary">Lưu phiếu nhập</button>
+        <a asp-action="DanhSachPhieuNhap" class="btn btn-secondary">Quay lại</a>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        function addRow() {
+            const index = document.querySelectorAll('#chiTietNhapTable tbody tr').length;
+            const row = `
+                <tr>
+                    <td>
+                        <select name="ChiTietNhap[${index}].MaSp" class="form-control">
+        @foreach (var sp in Model.SanPhamList)
+        {
+                                    <option value="@sp.Value">@sp.Text</option>
+        }
+                        </select>
+                    </td>
+                    <td><input type="number" name="ChiTietNhap[${index}].SoLuong" class="form-control" /></td>
+                    <td><input type="number" name="ChiTietNhap[${index}].DonGiaNhap" class="form-control" /></td>
+                    <td><button type="button" class="btn btn-sm btn-danger" onclick="removeRow(this)">Xóa</button></td>
+                </tr>
+            `;
+            document.querySelector("#chiTietNhapTable tbody").insertAdjacentHTML('beforeend', row);
+        }
+
+        function removeRow(btn) {
+            btn.closest('tr').remove();
+        }
+    </script>
+}

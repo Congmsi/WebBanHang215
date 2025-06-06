@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>@ViewData["Title"]</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="~/ALayoutLoc/img/favicon.ico" rel="icon">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="~/ALayoutLoc/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="~/ALayoutLoc/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row bg-secondary py-2 px-xl-5">
+            <div class="col-lg-6 d-none d-lg-block">
+                <div class="d-inline-flex align-items-center">
+                    <!-- Thêm các liên kết hỗ trợ nếu cần -->
+                </div>
+            </div>
+            <div class="col-lg-6 text-center text-lg-right">
+                <!-- Thông tin tài khoản, logout, v.v. -->
+            </div>
+        </div>
+        <div class="row align-items-center py-3 px-xl-5">
+            <div class="col-lg-3 d-none d-lg-block">
+                <a href="" class="text-decoration-none">
+                    <span class="h1 text-uppercase text-primary bg-dark px-2">Cong</span>
+                    <span class="h1 text-uppercase text-dark bg-primary px-2 ml-n1">Shop</span>
+                </a>
+            </div>
+            <div class="col-lg-6 col-6 text-left">
+                <form action="">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search for orders">
+                        <div class="input-group-append">
+                            <span class="input-group-text bg-transparent text-primary">
+                                <i class="fa fa-search"></i>
+                            </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-lg-3 col-6 text-right">
+                <a href="#" class="btn border"><i class="fas fa-heart text-primary"></i><span class="badge">0</span></a>
+                <a href="#" class="btn border"><i class="fas fa-shopping-cart text-primary"></i><span class="badge">0</span></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid bg-secondary mb-5">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 100px">
+            <h1 class="font-weight-semi-bold text-uppercase mb-3">Quản lý đơn hàng</h1>
+            <div class="bg-primary text-white text-center py-3 mb-4 rounded">
+                <strong>Thống kê:</strong>
+                <span class="ms-3">Đang xử lý: @(Model.ThongKeTheoTrangThai.ContainsKey("Đang xử lý") ? Model.ThongKeTheoTrangThai["Đang xử lý"] : 0)</span>
+                <span class="ms-3">Đã xử lý: @(Model.ThongKeTheoTrangThai.ContainsKey("Đã xử lý") ? Model.ThongKeTheoTrangThai["Đã xử lý"] : 0)</span>
+                <span class="ms-3">Hoàn thành: @(Model.ThongKeTheoTrangThai.ContainsKey("Hoàn thành") ? Model.ThongKeTheoTrangThai["Hoàn thành"] : 0)</span>
+                <span class="ms-3">Hủy: @(Model.ThongKeTheoTrangThai.ContainsKey("Hủy") ? Model.ThongKeTheoTrangThai["Hủy"] : 0)</span>
+            </div>
+
+            <div class="d-inline-flex">
+                <p class="m-0"><a href="/">Home</a></p>
+                <p class="m-0 px-2">-</p>
+                <p class="m-0">Lọc đơn hàng</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid pt-5">
+        <div class="row px-xl-5">
+            <!-- Cột trái: bộ lọc đơn hàng -->
+            <div class="col-lg-3">
+                @RenderSection("DonHangFilterSidebar", required: false)
+            </div>
+
+            <!-- Cột phải: danh sách đơn hàng -->
+            <div class="col-lg-9">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+    <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="~/ALayoutLoc/lib/easing/easing.min.js"></script>
+    <script src="~/ALayoutLoc/lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="~/ALayoutLoc/mail/jqBootstrapValidation.min.js"></script>
+    <script src="~/ALayoutLoc/mail/contact.js"></script>
+    <script src="~/ALayoutLoc/js/main.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,123 @@
+﻿@model WebBanHang215.Areas.admin.ViewModels.DonHangFilterViewModel
+@using X.PagedList.Mvc.Core
+@using X.PagedList
+
+@{
+    ViewData["Title"] = "Lọc đơn hàng";
+    Layout = "~/Areas/admin/Views/HomeAdmin/_LayoutLocDonHang.cshtml";
+    int stt = (Model.KetQua.PageNumber - 1) * Model.KetQua.PageSize + 1;
+}
+
+@section DonHangFilterSidebar {
+    <form id="filterForm" method="get" asp-area="admin" asp-controller="DonHang" asp-action="LocDonHang">
+        <!-- Mã đơn hàng -->
+        <div class="border-bottom mb-4 pb-4">
+            <h5 class="font-weight-semi-bold mb-3">Mã đơn hàng</h5>
+            <input type="number" name="maDh" value="@Model.MaDh" class="form-control mb-2 w-100" placeholder="Nhập mã đơn..." />
+        </div>
+
+        <!-- Tên sản phẩm -->
+        <div class="border-bottom mb-4 pb-4">
+            <h5 class="font-weight-semi-bold mb-3">Tên sản phẩm</h5>
+            <input type="text" name="tenSp" value="@Model.TenSp" class="form-control mb-2 w-100" placeholder="Nhập tên sản phẩm..." />
+        </div>
+
+        <!-- Tên người đặt -->
+        <div class="border-bottom mb-4 pb-4">
+            <h5 class="font-weight-semi-bold mb-3">Tên đăng nhập</h5>
+            <input type="text" name="tuKhoa" value="@Model.TuKhoa" class="form-control mb-2 w-100" placeholder="Nhập tên người đặt..." />
+        </div>
+
+        <!-- Trạng thái -->
+        <div class="border-bottom mb-4 pb-4">
+            <h5 class="font-weight-semi-bold mb-3">Trạng thái</h5>
+            <select name="trangThai" class="form-control mb-2 w-100">
+                <option value="">-- Tất cả --</option>
+                <option value="Đang xử lý" @(Model.TrangThai == "Đang xử lý" ? "selected" : "")>Đang xử lý</option>
+                <option value="Đã xử lý" @(Model.TrangThai == "Đã xử lý" ? "selected" : "")>Đã xử lý</option>
+                <option value="Hoàn thành" @(Model.TrangThai == "Hoàn thành" ? "selected" : "")>Hoàn thành</option>
+                <option value="Hủy" @(Model.TrangThai == "Hủy" ? "selected" : "")>Hủy</option>
+            </select>
+        </div>
+
+        <!-- Khoảng ngày -->
+        <div class="border-bottom mb-4 pb-4">
+            <h5 class="font-weight-semi-bold mb-3">Ngày đặt hàng</h5>
+            <input type="date" name="ngayTu" value="@(Model.TuNgay?.ToString("yyyy-MM-dd"))" class="form-control mb-2 w-100" />
+            <input type="date" name="ngayDen" value="@(Model.DenNgay?.ToString("yyyy-MM-dd"))" class="form-control mb-2 w-100" />
+        </div>
+
+        <!-- Tổng tiền -->
+        <div class="border-bottom pb-4">
+            <h5 class="font-weight-semi-bold mb-3">Tổng tiền</h5>
+            <input type="number" step="1000" name="tongTienTu" value="@Model.TongTienTu" placeholder="Từ..." class="form-control mb-2 w-100" />
+            <input type="number" step="1000" name="tongTienDen" value="@Model.TongTienDen" placeholder="Đến..." class="form-control mb-2 w-100" />
+        </div>
+
+        <div class="text-start mt-3">
+            <button type="submit" class="btn btn-primary">Lọc đơn hàng</button>
+        </div>
+    </form>
+}
+
+<table class="table table-bordered text-center">
+    <thead class="table-success">
+        <tr>
+            <th>STT</th>
+            <th>Mã đơn</th>
+            <th>Người đặt</th>
+            <th>Ngày đặt</th>
+            <th>Tổng tiền</th>
+            <th>Trạng thái</th>
+            <th>Sản Phẩm</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var dh in Model.KetQua)
+        {
+            <tr>
+                <td>@stt</td>
+                <td>@dh.MaDh</td>
+                <td>@dh.MaNdNavigation?.TenDangNhap</td>
+                <td>@dh.NgayDatHang?.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>@dh.TongTien?.ToString("N0") VNĐ</td>
+                <td>@dh.TrangThai</td>
+                <td>
+                    @{
+                        var tenSps = dh.ChiTietDonHangs
+                        ?.Select(ct => ct.MaSpNavigation?.TenSp)
+                        ?.Where(t => !string.IsNullOrEmpty(t))
+                        ?.Distinct()
+                        ?.ToList();
+
+                        var hienThiTenSp = tenSps != null ? string.Join(", ", tenSps) : "Không có sản phẩm";
+                    }
+                    @hienThiTenSp
+                </td>
+            </tr>
+            stt++;
+        }
+    </tbody>
+</table>
+
+<div class="text-center mt-4">
+    @Html.PagedListPager(Model.KetQua, page => Url.Action("LocDonHang", new
+        {
+            page,
+            maDh = Model.MaDh,
+            tenSp = Model.TenSp,
+            trangThai = Model.TrangThai,
+            ngayTu = Model.TuNgay?.ToString("yyyy-MM-dd"),
+            ngayDen = Model.DenNgay?.ToString("yyyy-MM-dd"),
+            tongTienTu = Model.TongTienTu,
+            tongTienDen = Model.TongTienDen,
+            tuKhoa = Model.TuKhoa
+        }), new PagedListRenderOptions
+{
+    DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+    DisplayLinkToNextPage = PagedListDisplayMode.Always,
+    UlElementClasses = new[] { "pagination justify-content-center" },
+    LiElementClasses = new[] { "page-item" },
+    PageClasses = new[] { "page-link" }
+})
+</div>

@@ -1,0 +1,40 @@
+﻿@model WebBanHang215.ViewModels.SanPhamDeleteViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "Xóa sản phẩm";
+    Layout = "~/Areas/admin/Views/_LayoutAdmin.cshtml";
+}
+
+<h2 class="text-danger">Xác nhận xóa sản phẩm</h2>
+<hr />
+<div class="alert alert-warning">
+    <p>Bạn có chắc chắn muốn xóa sản phẩm sau không?</p>
+</div>
+
+<div class="mb-3">
+    <strong>Tên sản phẩm:</strong> @Model.TenSp
+</div>
+<div class="mb-3">
+    <strong>Mô tả:</strong> @Model.MoTa
+</div>
+<div class="mb-3">
+    <strong>Giá bán:</strong> @Model.Gia?.ToString("N0") VNĐ
+</div>
+<div class="mb-3">
+    <strong>Giá nhập:</strong> @Model.GiaNhap?.ToString("N0") VNĐ
+</div>
+<div class="mb-3">
+    <strong>Giá khuyến mãi:</strong> @Model.GiaKhuyenMai?.ToString("N0") VNĐ
+</div>
+<div class="mb-3">
+    <strong>Số lượng nhập:</strong> @Model.SoLuongNhap
+</div>
+
+
+<form asp-action="XoaSanPham" asp-area="admin" asp-controller="HomeAdmin" method="post">
+    <input type="hidden" asp-for="MaSp" />
+    <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
+    <a asp-action="DanhMucSanPham" asp-area="admin" asp-controller="HomeAdmin" class="btn btn-secondary">Hủy</a>
+</form>
+

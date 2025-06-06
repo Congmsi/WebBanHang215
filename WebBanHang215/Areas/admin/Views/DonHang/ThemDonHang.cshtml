@@ -1,0 +1,159 @@
+﻿@*@model WebBanHang215.Areas.admin.ViewModels.DonHangCreateViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "Thêm đơn hàng";
+    Layout = "~/Areas/admin/Views/_LayoutAdmin.cshtml";
+}
+
+<h2 class="text-center text-primary my-4">Thêm đơn hàng mới</h2>
+
+<form asp-action="ThemDonHang" method="post" class="container">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="MaNd" class="form-label"></label>
+        <select asp-for="MaNd" asp-items="Model.NguoiDungList" class="form-select">
+            <option value="">-- Chọn người dùng --</option>
+        </select>
+        <span asp-validation-for="MaNd" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="TongTien" class="form-label"></label>
+        <input asp-for="TongTien" class="form-control" />
+        <span asp-validation-for="TongTien" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="TrangThai" class="form-label"></label>
+        <select asp-for="TrangThai" class="form-select">
+            <option value="">-- Chọn trạng thái --</option>
+            <option>Đang xử lý</option>
+            <option>Đã xử lý</option>
+            <option>Hoàn thành</option>
+            <option>Hủy</option>
+        </select>
+        <span asp-validation-for="TrangThai" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MaKm" class="form-label"></label>
+        <select asp-for="MaKm" asp-items="Model.KhuyenMaiList" class="form-select">
+            <option value="">-- Không áp dụng --</option>
+        </select>
+        <span asp-validation-for="MaKm" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Lưu</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Quay lại</a>
+</form>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}*@
+
+        @model WebBanHang215.Areas.admin.ViewModels.DonHangCreateViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "Thêm đơn hàng";
+    Layout = "~/Areas/admin/Views/_LayoutAdmin.cshtml";
+}
+
+<h2 class="text-center text-primary my-4">Thêm đơn hàng mới</h2>
+
+<form asp-action="ThemDonHang" method="post" class="container">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="MaNd" class="form-label"></label>
+        <select asp-for="MaNd" asp-items="Model.NguoiDungList" class="form-select">
+            <option value="">-- Chọn người dùng --</option>
+        </select>
+        <span asp-validation-for="MaNd" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="TongTien" class="form-label"></label>
+        <input asp-for="TongTien" class="form-control" />
+        <span asp-validation-for="TongTien" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="TrangThai" class="form-label"></label>
+        <select asp-for="TrangThai" class="form-select">
+            <option value="">-- Chọn trạng thái đơn --</option>
+            <option>Đang xử lý</option>
+            <option>Đã xử lý</option>
+            <option>Hoàn thành</option>
+            <option>Hủy</option>
+        </select>
+        <span asp-validation-for="TrangThai" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MaKm" class="form-label"></label>
+        <select asp-for="MaKm" asp-items="Model.KhuyenMaiList" class="form-select">
+            <option value="">-- Không áp dụng --</option>
+        </select>
+        <span asp-validation-for="MaKm" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="DiaChiGiaoHang" class="form-label"></label>
+        <input asp-for="DiaChiGiaoHang" class="form-control" />
+        <span asp-validation-for="DiaChiGiaoHang" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="HinhThucThanhToan" class="form-label"></label>
+        <select asp-for="HinhThucThanhToan" class="form-select">
+            <option value="">-- Chọn hình thức thanh toán --</option>
+            <option>COD</option>
+            <option>VNPay</option>
+            <option>Momo</option>
+        </select>
+        <span asp-validation-for="HinhThucThanhToan" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="TrangThaiThanhToan" class="form-label"></label>
+        <select asp-for="TrangThaiThanhToan" class="form-select">
+            <option value="">-- Chọn trạng thái thanh toán --</option>
+            <option>Chưa thanh toán</option>
+            <option>Đã thanh toán</option>
+        </select>
+        <span asp-validation-for="TrangThaiThanhToan" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MaGiaoDich" class="form-label"></label>
+        <input asp-for="MaGiaoDich" class="form-control" />
+        <span asp-validation-for="MaGiaoDich" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="NgayGiaoDuKien" class="form-label"></label>
+        <input asp-for="NgayGiaoDuKien" type="date" class="form-control" />
+        <span asp-validation-for="NgayGiaoDuKien" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="NgayGiaoThucTe" class="form-label"></label>
+        <input asp-for="NgayGiaoThucTe" type="date" class="form-control" />
+        <span asp-validation-for="NgayGiaoThucTe" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Lưu</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Quay lại</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

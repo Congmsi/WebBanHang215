@@ -1,0 +1,59 @@
+﻿@model WebBanHang215.Areas.admin.ViewModels.ChiTietPhieuNhapItemViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "Xem chi tiết phiếu nhập";
+    Layout = "~/Areas/admin/Views/_LayoutAdmin.cshtml";
+}
+
+<div class="text-center my-4">
+    <h1 class="text-dark">Thông tin chi tiết phiếu nhập</h1>
+</div>
+
+<div class="card shadow p-4">
+    <div class="mb-3 row">
+        <label class="col-sm-3 col-form-label fw-bold">Mã chi tiết nhập:</label>
+        <div class="col-sm-9">
+            <p class="form-control-plaintext">@Model.MaChiTietNk</p>
+        </div>
+    </div>
+
+    <div class="mb-3 row">
+        <label class="col-sm-3 col-form-label fw-bold">Mã phiếu nhập:</label>
+        <div class="col-sm-9">
+            <p class="form-control-plaintext">@Model.MaPhieuNhap</p>
+        </div>
+    </div>
+
+    <div class="mb-3 row">
+        <label class="col-sm-3 col-form-label fw-bold">Tên sản phẩm:</label>
+        <div class="col-sm-9">
+            <p class="form-control-plaintext">@Model.TenSp</p>
+        </div>
+    </div>
+
+    <div class="mb-3 row">
+        <label class="col-sm-3 col-form-label fw-bold">Số lượng:</label>
+        <div class="col-sm-9">
+            <p class="form-control-plaintext">@Model.SoLuong</p>
+        </div>
+    </div>
+
+    <div class="mb-3 row">
+        <label class="col-sm-3 col-form-label fw-bold">Đơn giá nhập:</label>
+        <div class="col-sm-9">
+            <p class="form-control-plaintext">@Model.DonGiaNhap.ToString("N0")</p>
+        </div>
+    </div>
+
+    <div class="mb-3 row">
+        <label class="col-sm-3 col-form-label fw-bold">Ngày nhập:</label>
+        <div class="col-sm-9">
+            <p class="form-control-plaintext">@Model.NgayNhap.ToString("dd/MM/yyyy")</p>
+        </div>
+    </div>
+
+    <div class="text-end mt-4">
+        <a asp-action="DanhSachChiTietPhieuNhap" asp-route-maPhieuNhap="@Model.MaPhieuNhap" class="btn btn-secondary">← Quay lại danh sách</a>
+    </div>
+</div>

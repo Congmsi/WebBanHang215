@@ -1,0 +1,87 @@
+﻿@model WebBanHang215.ViewModels.SanPhamCreateViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Thêm sản phẩm mới";
+    Layout = "~/Areas/admin/Views/_LayoutAdmin.cshtml";
+}
+
+<h2 class="text-center text-primary my-4">Thêm sản phẩm mới</h2>
+
+<form asp-action="ThemSanPhamMoi" method="post" class="container">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="TenSp" class="form-label"></label>
+        <input asp-for="TenSp" class="form-control" />
+        <span asp-validation-for="TenSp" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MoTa" class="form-label"></label>
+        <textarea asp-for="MoTa" class="form-control"></textarea>
+        <span asp-validation-for="MoTa" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Gia" class="form-label"></label>
+        <input asp-for="Gia" class="form-control" />
+        <span asp-validation-for="Gia" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="GiaNhap" class="form-label"></label>
+        <input asp-for="GiaNhap" class="form-control" />
+        <span asp-validation-for="GiaNhap" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="GiaKhuyenMai" class="form-label"></label>
+        <input asp-for="GiaKhuyenMai" class="form-control" />
+        <span asp-validation-for="GiaKhuyenMai" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="SoLuongNhap" class="form-label"></label>
+        <input asp-for="SoLuongNhap" class="form-control" />
+        <span asp-validation-for="SoLuongNhap" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MaLoai" class="form-label"></label>
+        <select asp-for="MaLoai" asp-items="ViewBag.MaLoai" class="form-select"></select>
+        <span asp-validation-for="MaLoai" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MaHang" class="form-label"></label>
+        <select asp-for="MaHang" asp-items="ViewBag.MaHang" class="form-select"></select>
+        <span asp-validation-for="MaHang" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MaNcc" class="form-label"></label>
+        <select asp-for="MaNcc" asp-items="ViewBag.MaNcc" class="form-select"></select>
+        <span asp-validation-for="MaNcc" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MaTrangThai" class="form-label"></label>
+        <select asp-for="MaTrangThai" asp-items="ViewBag.MaTrangThai" class="form-select"></select>
+        <span asp-validation-for="MaTrangThai" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MaGioiTinh" class="form-label"></label>
+        <select asp-for="MaGioiTinh" asp-items="ViewBag.MaGioiTinh" class="form-select"></select>
+        <span asp-validation-for="MaGioiTinh" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Lưu</button>
+    <a asp-action="DanhMucSanPham" class="btn btn-secondary ms-2">Quay lại</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

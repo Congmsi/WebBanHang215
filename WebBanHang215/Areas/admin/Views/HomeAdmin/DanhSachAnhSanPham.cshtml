@@ -1,0 +1,40 @@
+﻿@model WebBanHang215.ViewModels.DanhSachAnhSanPhamViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "Danh sách ảnh sản phẩm";
+    Layout = "~/Areas/admin/Views/_LayoutAdmin.cshtml";
+}
+
+<div class="text-center my-4">
+    <h2 class="text-danger">Ảnh của sản phẩm: @Model.TenSp</h2>
+</div>
+
+<div class="d-flex flex-wrap gap-3 justify-content-start mb-4">
+    @if (Model.UrlAnh != null && Model.UrlAnh.Any())
+    {
+        foreach (var anh in Model.UrlAnh)
+        {
+            <div class="border p-2" style="width: 200px;">
+                <img src="@Url.Content("~" + anh.Url)" alt="Ảnh sản phẩm" class="img-thumbnail" style="height: 250px; width: 100%; object-fit: cover;" />
+
+
+
+                <form asp-action="XoaAnhSanPham" asp-area="admin" asp-controller="HomeAdmin" method="get" class="mt-2">
+                    <input type="hidden" name="id" value="@anh.MaAnh" />
+                    <button type="submit" class="btn btn-danger btn-sm w-100">Xóa ảnh</button>
+                </form>
+            </div>
+        }
+    }
+    else
+    {
+        <p class="text-muted">Không có ảnh nào cho sản phẩm này.</p>
+    }
+</div>
+
+<div class="text-center mt-4">
+    <a asp-action="DanhMucSanPham" asp-area="admin" asp-controller="HomeAdmin" class="btn btn-secondary">
+        Quay lại danh mục sản phẩm
+    </a>
+</div>

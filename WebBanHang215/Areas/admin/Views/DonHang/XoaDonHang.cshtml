@@ -1,0 +1,99 @@
+﻿@*@model WebBanHang215.Areas.admin.ViewModels.DonHangDeleteViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "Xóa đơn hàng";
+    Layout = "~/Areas/admin/Views/_LayoutAdmin.cshtml";
+}
+
+<h2 class="text-danger">Xác nhận xóa đơn hàng</h2>
+
+<div class="alert alert-warning">
+    Bạn có chắc chắn muốn xóa đơn hàng sau không?
+</div>
+
+<table class="table table-bordered">
+    <tr>
+        <th>Mã đơn</th>
+        <td>@Model.MaDh</td>
+    </tr>
+    <tr>
+        <th>Người đặt hàng</th>
+        <td>@Model.TenDangNhap</td>
+    </tr>
+    <tr>
+        <th>Tổng tiền</th>
+        <td>@Model.TongTien?.ToString("N0")</td>
+    </tr>
+    <tr>
+        <th>Ngày đặt</th>
+        <td>@Model.NgayDatHang?.ToString("dd/MM/yyyy")</td>
+    </tr>
+    <tr>
+        <th>Trạng thái</th>
+        <td>@Model.TrangThai</td>
+    </tr>
+</table>
+
+<form asp-action="XoaDonHangConfirmed" method="post">
+    <input type="hidden" asp-for="MaDh" />
+    <button type="submit" class="btn btn-danger">Xóa</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Hủy</a>
+</form>*@
+
+@model WebBanHang215.Areas.admin.ViewModels.DonHangDeleteViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "Xóa đơn hàng";
+    Layout = "~/Areas/admin/Views/_LayoutAdmin.cshtml";
+}
+
+<h2 class="text-danger text-center">Xác nhận xóa đơn hàng</h2>
+
+<div class="alert alert-warning text-center">
+    <strong>Bạn có chắc chắn muốn xóa đơn hàng sau không?</strong>
+</div>
+
+<table class="table table-bordered">
+    <tr>
+        <th>@Html.DisplayNameFor(m => m.MaDh)</th>
+        <td>@Model.MaDh</td>
+    </tr>
+    <tr>
+        <th>@Html.DisplayNameFor(m => m.TenDangNhap)</th>
+        <td>@Model.TenDangNhap</td>
+    </tr>
+    <tr>
+        <th>@Html.DisplayNameFor(m => m.TongTien)</th>
+        <td>@(Model.TongTien.HasValue ? Model.TongTien.Value.ToString("N0") + " đ" : "")</td>
+    </tr>
+    <tr>
+        <th>@Html.DisplayNameFor(m => m.NgayDatHang)</th>
+        <td>@(Model.NgayDatHang?.ToString("dd/MM/yyyy HH:mm"))</td>
+    </tr>
+    <tr>
+        <th>@Html.DisplayNameFor(m => m.TrangThai)</th>
+        <td>@Model.TrangThai</td>
+    </tr>
+</table>
+
+<form asp-action="XoaDonHangConfirmed" method="post">
+    <input type="hidden" asp-for="MaDh" />
+    <div class="text-center">
+        <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
+        <a asp-action="Index" class="btn btn-secondary ms-2">Hủy</a>
+    </div>
+</form>
+
+@*
+    chú ý đã cho phép xóa đơn hàng thì xóa luôn các chi tiết đơn hàng liên quan
+    lệnh thực hiện: ALTER TABLE ChiTietDonHang
+	DROP CONSTRAINT FK_CTDonHang_DonHang
+
+	ALTER TABLE ChiTietDonHang
+ADD CONSTRAINT FK_ChiTietDonHang_DonHang
+FOREIGN KEY (MaDh)
+REFERENCES DonHang(MaDh)
+ON DELETE CASCADE;
+*@

@@ -1,0 +1,91 @@
+﻿@model WebBanHang215.Areas.admin.ViewModels.PhieuNhapFilterViewModel
+
+@{
+    Layout = "~/Areas/admin/Views/DonHang/_LayoutLocPhieuNhap.cshtml";
+    ViewData["Title"] = "Lọc Phiếu Nhập";
+}
+
+@section PhieuNhapFilterSidebar {
+    <form method="get" asp-area="admin" asp-controller="DonHang" asp-action="LocPhieuNhap" class="bg-light p-4 rounded">
+        <h5 class="mb-3 text-uppercase font-weight-bold">Bộ lọc phiếu nhập</h5>
+
+        <div class="form-group">
+            <label>Mã phiếu nhập</label>
+            <input type="text" name="maPhieuNhap" value="@Model.MaPhieuNhap" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label>Từ ngày</label>
+            <input type="date" name="tuNgay" value="@(Model.TuNgay?.ToString("yyyy-MM-dd"))" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label>Đến ngày</label>
+            <input type="date" name="denNgay" value="@(Model.DenNgay?.ToString("yyyy-MM-dd"))" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label>Nhà cung cấp</label>
+            <select name="maNcc" class="form-control">
+                <option value="">-- Tất cả --</option>
+                @foreach (var ncc in Model.DanhSachNhaCungCap)
+                {
+                    <option value="@ncc.Value" @(Model.MaNcc?.ToString() == ncc.Value ? "selected" : "")>
+                        @ncc.Text
+                    </option>
+                }
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Tổng tiền từ</label>
+            <input type="number" name="tongTienTu" value="@Model.TongTienTu" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label>Tổng tiền đến</label>
+            <input type="number" name="tongTienDen" value="@Model.TongTienDen" class="form-control" />
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 mt-3">Lọc kết quả</button>
+    </form>
+}
+
+
+<div class="mb-4">
+    @if (Model.KetQua != null && Model.KetQua.Any())
+    {
+        <h4 class="mb-3">Kết quả: <span class="text-primary">@Model.KetQua.Count</span> phiếu nhập</h4>
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Mã phiếu</th>
+                    <th>Ngày nhập</th>
+                    <th>Nhà cung cấp</th>
+                    <th class="text-right">Tổng tiền</th>
+                    <th>Ghi chú</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.KetQua)
+                {
+                    <tr>
+                        <td>@item.MaPhieuNhap</td>
+                        <td>@item.NgayNhap.ToString("dd/MM/yyyy")</td>
+                        <td>@item.NhaCungCap?.TenNhaCungCap</td>
+                        <td class="text-right">
+                            @item.ChiTietNhapKhos.Sum(ct => ct.SoLuong * ct.DonGiaNhap).ToString("N0") ₫
+                        </td>
+                        <td>@item.GhiChu</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else if (Model.KetQua != null)
+    {
+        <div class="alert alert-warning">
+            Không tìm thấy phiếu nhập nào khớp với tiêu chí lọc.
+        </div>
+    }
+</div>

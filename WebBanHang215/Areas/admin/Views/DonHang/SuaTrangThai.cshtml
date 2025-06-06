@@ -1,0 +1,30 @@
+﻿@model WebBanHang215.Models.DonHang
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "SuaTrangThai";
+    Layout = "~/Areas/admin/Views/_LayoutAdmin.cshtml";
+    
+}
+<h3>Cập nhật trạng thái đơn hàng</h3>
+
+<form asp-action="SuaTrangThai" method="post">
+    <input type="hidden" name="id" value="@Model.MaDh" />
+
+    <div class="form-group">
+        <label>Trạng thái hiện tại: </label>
+        <p><strong>@Model.TrangThai</strong></p>
+    </div>
+
+    <div class="form-group">
+        <label>Chọn trạng thái mới:</label>
+        <select name="trangThaiMoi" class="form-control" asp-items="ViewBag.TrangThaiList"></select>
+    </div>
+
+    <div class="text-danger">
+        @Html.ValidationSummary()
+    </div>
+
+    <button type="submit" class="btn btn-primary">Cập nhật</button>
+</form>
+
