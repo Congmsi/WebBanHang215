@@ -1,167 +1,158 @@
-﻿@*@model X.PagedList.IPagedList<WebBanHang215.Models.DonHang>
+﻿@model X.PagedList.IPagedList<WebBanHang215.Models.DonHang>
 @using X.PagedList.Mvc.Core
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
     ViewData["Title"] = "Danh sách đơn hàng";
-    Layout = "~/Areas/admin/Views/_LayoutAdmin.cshtml";
+    Layout = "~/Areas/admin/Views/_LayoutCustomAdmin.cshtml";
     int stt = (Model.PageNumber - 1) * Model.PageSize + 1;
 }
 
-<h2 class="text-center my-4">Danh sách đơn hàng</h2>
-<p>
-    <a asp-area="admin" asp-controller="DonHang" asp-action="ThemDonHang">Create New</a>
-</p>
-<table class="table w-100">
-    <thead>
-        <tr class="table-success">
-            <th>STT</th>
-            <th>Mã đơn</th>
-            <th>Tổng Tiền</th>
-            <th>Người đặt hàng</th>
-            <th>Ngày đặt</th>
-            <th>Trạng thái</th>
-            <th colspan="4" class="text-center">Thao tác</th>
-        </tr>
-    </thead>
-    <tbody>
-        @{
-            string MauDHSD = "table-success";
-            int MauDH = 0;
-        }
+<!-- Page Header -->
+<div class="page-header">
+    <h1 class="page-title">Quản lý đơn hàng</h1>
+    <p class="page-subtitle">Theo dõi và quản lý tất cả đơn hàng trong hệ thống</p>
+</div>
 
-        @foreach (var don in Model)
-        {
-            switch (MauDH % 4)
-            {
-                case 0: MauDHSD = "table-primary"; break;
-                case 1: MauDHSD = "table-warning"; break;
-                case 2: MauDHSD = "table-success"; break;
-                case 3: MauDHSD = "table-danger"; break;
-            }
-            MauDH++;
+<!-- Actions -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="admin-card">
+            <div class="admin-card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Danh sách đơn hàng (@Model.TotalItemCount đơn hàng)</h5>
+                    <div class="d-flex gap-2">
+                        <a asp-area="admin" asp-controller="DonHang" asp-action="LocDonHang" class="btn btn-outline-primary">
+                            <i class="fas fa-filter me-2"></i>Lọc đơn hàng
+                        </a>
+                        <a asp-area="admin" asp-controller="DonHang" asp-action="ThemDonHang" class="btn btn-primary">
+                            <i class="fas fa-plus me-2"></i>Tạo đơn hàng mới
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-            <tr class="@MauDHSD">
-                <td>@stt</td>
-                <td>@don.MaDh</td>
-                <td>@don.TongTien?.ToString("N0")</td>
-                <td>@(don.MaNdNavigation?.TenDangNhap ?? "Không rõ")</td>
-                <td>@don.NgayDatHang?.ToString("dd/MM/yyyy HH:mm")</td>
-                <td>@don.TrangThai</td>
-               
-                <td>
-                    <a asp-area="admin" asp-controller="DonHang" asp-action="SuaDonHang" asp-route-id="@don.MaDh" class="btn btn-warning">Edit</a>
-                </td>
-                <td>
-                    <a asp-area="admin" asp-controller="DonHang" asp-action="XoaDonHang" asp-route-id="@don.MaDh" class="btn btn-danger">Delete</a>
-                </td>
-                <td>
-                    <a asp-area="admin" asp-controller="DonHang" asp-action="XemChiTietDonHang" asp-route-id="@don.MaDh" class="btn btn-info">Detail</a>
-                </td>
-            </tr>
-            stt++;
-        }
-    </tbody>
-</table>
+<!-- Orders Table -->
+<div class="admin-card">
+    <div class="admin-card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>STT</th>
+                        <th>Mã đơn</th>
+                        <th>Khách hàng</th>
+                        <th>Tổng tiền</th>
+                        <th>Ngày đặt</th>
+                        <th>Trạng thái đơn</th>
+                        <th>Thanh toán</th>
+                        <th>Giao hàng</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var don in Model)
+                    {
+                        <tr>
+                            <td><span class="badge bg-secondary">@stt</span></td>
+                            <td>
+                                <strong class="text-primary">#@don.MaDh</strong>
+                            </td>
+                            <td>
+                                <div class="fw-semibold">@(don.MaNdNavigation?.TenDangNhap ?? "Khách vãng lai")</div>
+                                <small class="text-muted">@don.DiaChiGiaoHang</small>
+                            </td>
+                            <td>
+                                <span class="fw-bold text-success">@don.TongTien?.ToString("N0") VNĐ</span>
+                            </td>
+                            <td>
+                                <div>@don.NgayDatHang?.ToString("dd/MM/yyyy")</div>
+                                <small class="text-muted">@don.NgayDatHang?.ToString("HH:mm")</small>
+                            </td>
+                            <td>
+                                @{
+                                    string statusClass = don.TrangThai switch
+                                    {
+                                        "Chờ xử lý" => "bg-warning",
+                                        "Đang xử lý" => "bg-info",
+                                        "Đang giao" => "bg-primary",
+                                        "Đã giao" => "bg-success",
+                                        "Đã hủy" => "bg-danger",
+                                        _ => "bg-secondary"
+                                    };
+                                }
+                                <span class="badge @statusClass">@don.TrangThai</span>
+                            </td>
+                            <td>
+                                <div>@don.HinhThucThanhToan</div>
+                                @{
+                                    string paymentClass = don.TrangThaiThanhToan switch
+                                    {
+                                        "Đã thanh toán" => "text-success",
+                                        "Chưa thanh toán" => "text-warning",
+                                        "Thất bại" => "text-danger",
+                                        _ => "text-muted"
+                                    };
+                                }
+                                <small class="@paymentClass">@don.TrangThaiThanhToan</small>
+                            </td>
+                            <td>
+                                @if (don.NgayGiaoThucTe.HasValue)
+                                {
+                                    <div class="text-success">
+                                        <i class="fas fa-check-circle me-1"></i>
+                                        @don.NgayGiaoThucTe?.ToString("dd/MM/yyyy")
+                                    </div>
+                                }
+                                else if (don.NgayGiaoDuKien.HasValue)
+                                {
+                                    <div class="text-info">
+                                        <i class="fas fa-clock me-1"></i>
+                                        @don.NgayGiaoDuKien?.ToString("dd/MM/yyyy")
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Chưa xác định</span>
+                                }
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a asp-area="admin" asp-controller="DonHang" asp-action="XemChiTietDonHang" 
+                                       asp-route-id="@don.MaDh" class="btn btn-sm btn-outline-info" title="Xem chi tiết">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a asp-area="admin" asp-controller="DonHang" asp-action="SuaDonHang" 
+                                       asp-route-id="@don.MaDh" class="btn btn-sm btn-outline-primary" title="Chỉnh sửa">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a asp-area="admin" asp-controller="DonHang" asp-action="XoaDonHang" 
+                                       asp-route-id="@don.MaDh" class="btn btn-sm btn-outline-danger" title="Xóa">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        stt++;
+                    }
+                </tbody>
+            </table>
+        </div>
 
-<div class="product__pagination text-center mt-4">
-    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }),
-            new PagedListRenderOptions
-    {
-        DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
-        DisplayLinkToNextPage = PagedListDisplayMode.Always,
-        UlElementClasses = new[] { "pagination justify-content-center" },
-        LiElementClasses = new[] { "page-item" },
-        PageClasses = new[] { "page-link" }
-    })
-</div>*@
-
-
-@model X.PagedList.IPagedList<WebBanHang215.Models.DonHang>
-@using X.PagedList.Mvc.Core
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-
-@{
-    ViewData["Title"] = "Danh sách đơn hàng";
-    Layout = "~/Areas/admin/Views/_LayoutAdmin.cshtml";
-    int stt = (Model.PageNumber - 1) * Model.PageSize + 1;
-}
-
-<h2 class="text-center my-4">Danh sách đơn hàng</h2>
-<p>
-    <a asp-area="admin" asp-controller="DonHang" asp-action="ThemDonHang" class="btn btn-primary">Tạo đơn hàng mới</a>
-</p>
-
-<table class="table table-bordered table-hover">
-    <thead class="table-success text-center">
-        <tr>
-            <th>STT</th>
-            <th>Mã đơn</th>
-            <th>Tổng tiền</th>
-            <th>Người đặt</th>
-            <th>Ngày đặt</th>
-            <th>Trạng thái đơn</th>
-            <th>Địa chỉ giao</th>
-            <th>Hình thức thanh toán</th>
-            <th>Trạng thái thanh toán</th>
-            <th>Giao dự kiến</th>
-            <th>Giao thực tế</th>
-            <th colspan="3" class="text-center">Thao tác</th>
-        </tr>
-    </thead>
-    <tbody>
-        @{
-            string MauDHSD = "table-primary";
-            int MauDH = 0;
-        }
-
-        @foreach (var don in Model)
-        {
-            switch (MauDH % 4)
-            {
-                case 0: MauDHSD = "table-primary"; break;
-                case 1: MauDHSD = "table-warning"; break;
-                case 2: MauDHSD = "table-success"; break;
-                case 3: MauDHSD = "table-danger"; break;
-            }
-            MauDH++;
-
-            <tr class="@MauDHSD text-center align-middle">
-                <td>@stt</td>
-                <td>@don.MaDh</td>
-                <td>@don.TongTien?.ToString("N0")</td>
-                <td>@(don.MaNdNavigation?.TenDangNhap ?? "Không rõ")</td>
-                <td>@don.NgayDatHang?.ToString("dd/MM/yyyy HH:mm")</td>
-                <td>@don.TrangThai</td>
-                <td>@don.DiaChiGiaoHang</td>
-                <td>@don.HinhThucThanhToan</td>
-                <td>@don.TrangThaiThanhToan</td>
-                <td>@don.NgayGiaoDuKien?.ToString("dd/MM/yyyy")</td>
-                <td>@don.NgayGiaoThucTe?.ToString("dd/MM/yyyy")</td>
-
-                <td>
-                    <a asp-area="admin" asp-controller="DonHang" asp-action="SuaDonHang" asp-route-id="@don.MaDh" class="btn btn-warning btn-sm">Edit</a>
-                </td>
-                <td>
-                    <a asp-area="admin" asp-controller="DonHang" asp-action="XoaDonHang" asp-route-id="@don.MaDh" class="btn btn-danger btn-sm">Delete</a>
-                </td>
-                <td>
-                    <a asp-area="admin" asp-controller="DonHang" asp-action="XemChiTietDonHang" asp-route-id="@don.MaDh" class="btn btn-info btn-sm">Detail</a>
-                </td>
-            </tr>
-            stt++;
-        }
-    </tbody>
-</table>
-
-<div class="product__pagination text-center mt-4">
-    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }),
-            new PagedListRenderOptions
-    {
-        DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
-        DisplayLinkToNextPage = PagedListDisplayMode.Always,
-        UlElementClasses = new[] { "pagination justify-content-center" },
-        LiElementClasses = new[] { "page-item" },
-        PageClasses = new[] { "page-link" }
-    })
+        <!-- Pagination -->
+        <div class="d-flex justify-content-center mt-4">
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page }),
+                new PagedListRenderOptions
+                {
+                    DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                    DisplayLinkToNextPage = PagedListDisplayMode.Always,
+                    UlElementClasses = new[] { "pagination justify-content-center" },
+                    LiElementClasses = new[] { "page-item" },
+                    PageClasses = new[] { "page-link" }
+                })
+        </div>
+    </div>
 </div>

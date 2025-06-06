@@ -937,13 +937,15 @@ namespace WebBanHang215.Areas.admin.Controllers
                 .ToPagedList(pageNumber, pageSize);
 
             return View(danhSach);
-        }
-
-
-        [HttpGet]
+        }        [HttpGet]
         public IActionResult SuaPhieuNhap(string id)
         {
-            var phieuNhap = _context.NhapKhos.FirstOrDefault(p => p.MaPhieuNhap == id);
+            var phieuNhap = _context.NhapKhos
+                .Include(p => p.MaNccNavigation)
+                .Include(p => p.ChiTietNhapKhos)
+                    .ThenInclude(ct => ct.SanPham)
+                .FirstOrDefault(p => p.MaPhieuNhap == id);
+            
             if (phieuNhap == null)
             {
                 return NotFound();
@@ -953,7 +955,17 @@ namespace WebBanHang215.Areas.admin.Controllers
             {
                 MaPhieuNhap = phieuNhap.MaPhieuNhap,
                 NgayNhap = phieuNhap.NgayNhap,
-                GhiChu = phieuNhap.GhiChu
+                MaNcc = phieuNhap.MaNcc,
+                GhiChu = phieuNhap.GhiChu,
+                TenNhaCungCap = phieuNhap.MaNccNavigation?.TenNhaCungCap,
+                TongSoMat = phieuNhap.ChiTietNhapKhos?.Count ?? 0,
+                TongTien = phieuNhap.ChiTietNhapKhos?.Sum(ct => ct.SoLuong * ct.DonGiaNhap) ?? 0,
+                NhaCungCapList = _context.NhaCungCaps
+                    .Select(ncc => new SelectListItem
+                    {
+                        Value = ncc.MaNcc.ToString(),
+                        Text = ncc.TenNhaCungCap
+                    }).ToList()
             };
 
             return View(viewModel);
@@ -965,6 +977,12 @@ namespace WebBanHang215.Areas.admin.Controllers
         {
             if (!ModelState.IsValid)
             {
+                model.NhaCungCapList = _context.NhaCungCaps
+                    .Select(ncc => new SelectListItem
+                    {
+                        Value = ncc.MaNcc.ToString(),
+                        Text = ncc.TenNhaCungCap
+                    }).ToList();
                 return View(model);
             }
 
@@ -975,10 +993,12 @@ namespace WebBanHang215.Areas.admin.Controllers
             }
 
             phieuNhap.NgayNhap = model.NgayNhap;
+            phieuNhap.MaNcc = model.MaNcc;
             phieuNhap.GhiChu = model.GhiChu;
 
             _context.SaveChanges();
 
+            TempData["SuccessMessage"] = "Đã cập nhật thông tin phiếu nhập thành công!";
             return RedirectToAction("DanhSachPhieuNhap");
         }
         [HttpGet]

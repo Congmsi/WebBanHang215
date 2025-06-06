@@ -3,98 +3,186 @@
 
 @{
     ViewData["Title"] = "Thêm phiếu nhập kho";
-    Layout = "~/Areas/admin/Views/_LayoutAdmin.cshtml";
+    Layout = "~/Areas/admin/Views/_LayoutCustomAdmin.cshtml";
 }
 
-<div class="text-center my-4">
-    <h1 class="btn btn-primary shadow px-4 py-2 rounded text-white fs-2">
-        Thêm phiếu nhập kho
-    </h1>
+<!-- Page Header -->
+<div class="page-header">
+    <h1 class="page-title">Thêm phiếu nhập kho</h1>
+    <p class="page-subtitle">Tạo phiếu nhập hàng mới từ nhà cung cấp</p>
 </div>
 
-<form asp-action="ThemPhieuNhap" method="post">
-    <div class="form-group mb-3">
-        <label asp-for="MaPhieuNhap" class="form-label"></label>
-        <input asp-for="MaPhieuNhap" class="form-control" />
-        <span asp-validation-for="MaPhieuNhap" class="text-danger"></span>
+<div class="admin-card">
+    <div class="admin-card-header">
+        <h5 class="mb-0">
+            <i class="fas fa-file-import me-2"></i>Thông tin phiếu nhập
+        </h5>
     </div>
+    <div class="admin-card-body">        <form asp-action="ThemPhieuNhap" method="post" id="nhapKhoForm">
+            <!-- Error summary with icon -->
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger d-none" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <strong>Có lỗi xảy ra:</strong>
+            </div>
 
-    <div class="form-group mb-3">
-        <label asp-for="MaNcc" class="form-label">Nhà cung cấp</label>
-        <select asp-for="MaNcc" asp-items="Model.NhaCungCapList" class="form-control">
-            <option value="">-- Chọn nhà cung cấp --</option>
-        </select>
-        <span asp-validation-for="MaNcc" class="text-danger"></span>
+            <div class="row">
+                <div class="col-md-6">
+                    <!-- Import Slip Code -->
+                    <div class="mb-4">
+                        <label asp-for="MaPhieuNhap" class="form-label">
+                            <i class="fas fa-barcode me-2"></i>Mã phiếu nhập <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="MaPhieuNhap" class="form-control form-control-lg" placeholder="Nhập mã phiếu nhập..." />
+                        <span asp-validation-for="MaPhieuNhap" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <!-- Supplier Selection -->
+                    <div class="mb-4">
+                        <label asp-for="MaNcc" class="form-label">
+                            <i class="fas fa-truck me-2"></i>Nhà cung cấp <span class="text-danger">*</span>
+                        </label>
+                        <select asp-for="MaNcc" asp-items="Model.NhaCungCapList" class="form-select form-select-lg">
+                            <option value="">-- Chọn nhà cung cấp --</option>
+                        </select>
+                        <span asp-validation-for="MaNcc" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notes -->
+            <div class="mb-4">
+                <label asp-for="GhiChu" class="form-label">
+                    <i class="fas fa-sticky-note me-2"></i>Ghi chú
+                </label>
+                <textarea asp-for="GhiChu" class="form-control" rows="3" placeholder="Nhập ghi chú cho phiếu nhập..."></textarea>
+                <div class="form-text">
+                    <i class="fas fa-info-circle me-1"></i>Thông tin bổ sung về phiếu nhập (không bắt buộc)
+                </div>
+            </div>
+
+            <!-- Import Details Section -->
+            <div class="admin-card mt-4">
+                <div class="admin-card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-list-alt me-2"></i>Chi tiết sản phẩm nhập
+                    </h5>
+                    <button type="button" class="btn btn-primary btn-sm" onclick="addRow()">
+                        <i class="fas fa-plus me-2"></i>Thêm dòng
+                    </button>
+                </div>
+                <div class="admin-card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0" id="chiTietNhapTable">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="border-0">
+                                        <i class="fas fa-box me-2"></i>Sản phẩm
+                                    </th>
+                                    <th class="border-0">
+                                        <i class="fas fa-sort-numeric-up me-2"></i>Số lượng
+                                    </th>
+                                    <th class="border-0">
+                                        <i class="fas fa-dollar-sign me-2"></i>Đơn giá nhập
+                                    </th>
+                                    <th class="border-0 text-center">
+                                        <i class="fas fa-cogs me-2"></i>Thao tác
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.ChiTietNhap.Count; i++)
+                                {
+                                    <tr>
+                                        <td>
+                                            <select asp-for="ChiTietNhap[@i].MaSp" asp-items="Model.SanPhamList" class="form-select">
+                                                <option value="">-- Chọn sản phẩm --</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input asp-for="ChiTietNhap[@i].SoLuong" class="form-control" type="number" min="1" />
+                                        </td>
+                                        <td>
+                                            <input asp-for="ChiTietNhap[@i].DonGiaNhap" class="form-control" type="number" step="0.01" min="0" />
+                                        </td>
+                                        <td class="text-center">
+                                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeRow(this)">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+                <a asp-action="DanhSachPhieuNhap" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Quay lại
+                </a>
+                
+                <button type="submit" class="btn btn-success btn-lg">
+                    <i class="fas fa-save me-2"></i>Lưu phiếu nhập
+                </button>
+            </div>
+        </form>
     </div>
-
-    <div class="form-group mb-3">
-        <label asp-for="GhiChu" class="form-label">Ghi chú</label>
-        <textarea asp-for="GhiChu" class="form-control"></textarea>
-    </div>
-
-    <h4 class="mt-4">Chi tiết sản phẩm nhập</h4>
-    <table class="table table-bordered" id="chiTietNhapTable">
-        <thead class="table-success">
-            <tr>
-                <th>Sản phẩm</th>
-                <th>Số lượng</th>
-                <th>Đơn giá nhập</th>
-                <th>Thao tác</th>
-            </tr>
-        </thead>
-        <tbody>
-            @for (int i = 0; i < Model.ChiTietNhap.Count; i++)
-            {
-                <tr>
-                    <td>
-                        <select asp-for="ChiTietNhap[@i].MaSp" asp-items="Model.SanPhamList" class="form-control"></select>
-                    </td>
-                    <td>
-                        <input asp-for="ChiTietNhap[@i].SoLuong" class="form-control" />
-                    </td>
-                    <td>
-                        <input asp-for="ChiTietNhap[@i].DonGiaNhap" class="form-control" />
-                    </td>
-                    <td>
-                        <button type="button" class="btn btn-sm btn-danger" onclick="removeRow(this)">Xóa</button>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-    <button type="button" class="btn btn-secondary" onclick="addRow()">+ Thêm dòng</button>
-
-    <div class="form-group mt-4">
-        <button type="submit" class="btn btn-primary">Lưu phiếu nhập</button>
-        <a asp-action="DanhSachPhieuNhap" class="btn btn-secondary">Quay lại</a>
-    </div>
-</form>
+</div>
 
 @section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    
     <script>
         function addRow() {
             const index = document.querySelectorAll('#chiTietNhapTable tbody tr').length;
             const row = `
                 <tr>
                     <td>
-                        <select name="ChiTietNhap[${index}].MaSp" class="form-control">
-        @foreach (var sp in Model.SanPhamList)
-        {
-                                    <option value="@sp.Value">@sp.Text</option>
-        }
+                        <select name="ChiTietNhap[${index}].MaSp" class="form-select">
+                            <option value="">-- Chọn sản phẩm --</option>
+@foreach (var sp in Model.SanPhamList)
+{
+                            <option value="@sp.Value">@sp.Text</option>
+}
                         </select>
                     </td>
-                    <td><input type="number" name="ChiTietNhap[${index}].SoLuong" class="form-control" /></td>
-                    <td><input type="number" name="ChiTietNhap[${index}].DonGiaNhap" class="form-control" /></td>
-                    <td><button type="button" class="btn btn-sm btn-danger" onclick="removeRow(this)">Xóa</button></td>
+                    <td>
+                        <input type="number" name="ChiTietNhap[${index}].SoLuong" class="form-control" min="1" placeholder="Số lượng..." />
+                    </td>
+                    <td>
+                        <input type="number" name="ChiTietNhap[${index}].DonGiaNhap" class="form-control" step="0.01" min="0" placeholder="Đơn giá..." />
+                    </td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeRow(this)">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
                 </tr>
             `;
             document.querySelector("#chiTietNhapTable tbody").insertAdjacentHTML('beforeend', row);
         }
 
         function removeRow(btn) {
-            btn.closest('tr').remove();
+            // Only allow removal if more than one row exists
+            const tbody = btn.closest('tbody');
+            if (tbody.querySelectorAll('tr').length > 1) {
+                btn.closest('tr').remove();
+            } else {
+                alert('Phải có ít nhất một sản phẩm trong phiếu nhập!');
+            }
         }
+
+        // Add some visual feedback for form submission
+        document.getElementById('nhapKhoForm').addEventListener('submit', function(e) {
+            const submitBtn = this.querySelector('button[type="submit"]');
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang lưu...';
+            submitBtn.disabled = true;
+        });
     </script>
 }

@@ -43,4 +43,25 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=DangNhap}/{action=Login}/{id?}");
 
+// Add this after database creation
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<WebBanHangCong215Context>();
+    
+    // Check if admin exists
+    if (!context.NguoiDungs.Any(u => u.VaiTro == "Admin"))
+    {
+        var admin = new NguoiDung
+        {
+            TenDangNhap = "admin",
+            MatKhau = "123456", // Use proper hashing in production
+            HoVaTen = "Quản trị viên",
+            Email = "admin@shop.com",
+            VaiTro = "Admin"
+        };
+        context.NguoiDungs.Add(admin);
+        context.SaveChanges();
+    }
+}
+
 app.Run();

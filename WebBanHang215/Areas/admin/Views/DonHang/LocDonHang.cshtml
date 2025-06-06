@@ -1,123 +1,208 @@
 ﻿@model WebBanHang215.Areas.admin.ViewModels.DonHangFilterViewModel
 @using X.PagedList.Mvc.Core
 @using X.PagedList
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
     ViewData["Title"] = "Lọc đơn hàng";
-    Layout = "~/Areas/admin/Views/HomeAdmin/_LayoutLocDonHang.cshtml";
+    Layout = "~/Areas/admin/Views/_LayoutCustomAdmin.cshtml";
     int stt = (Model.KetQua.PageNumber - 1) * Model.KetQua.PageSize + 1;
 }
 
-@section DonHangFilterSidebar {
-    <form id="filterForm" method="get" asp-area="admin" asp-controller="DonHang" asp-action="LocDonHang">
-        <!-- Mã đơn hàng -->
-        <div class="border-bottom mb-4 pb-4">
-            <h5 class="font-weight-semi-bold mb-3">Mã đơn hàng</h5>
-            <input type="number" name="maDh" value="@Model.MaDh" class="form-control mb-2 w-100" placeholder="Nhập mã đơn..." />
+<!-- Page Header -->
+<div class="page-header">
+    <h1 class="page-title">Lọc đơn hàng</h1>
+    <p class="page-subtitle">Tìm kiếm và lọc đơn hàng theo nhiều tiêu chí</p>
+</div>
+
+<div class="row">
+    <!-- Filter Panel -->
+    <div class="col-md-3">
+        <div class="admin-card">
+            <div class="admin-card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-filter me-2"></i>Bộ lọc
+                </h5>
+            </div>
+            <div class="admin-card-body">
+                <form method="get" asp-area="admin" asp-controller="DonHang" asp-action="LocDonHang">
+                    <!-- Mã đơn hàng -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Mã đơn hàng</label>
+                        <input type="number" name="maDh" value="@Model.MaDh" class="form-control" placeholder="Nhập mã đơn..." />
+                    </div>
+
+                    <!-- Tên sản phẩm -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Tên sản phẩm</label>
+                        <input type="text" name="tenSp" value="@Model.TenSp" class="form-control" placeholder="Nhập tên sản phẩm..." />
+                    </div>
+
+                    <!-- Tên người đặt -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Tên đăng nhập</label>
+                        <input type="text" name="tuKhoa" value="@Model.TuKhoa" class="form-control" placeholder="Nhập tên người đặt..." />
+                    </div>
+
+                    <!-- Trạng thái -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Trạng thái</label>
+                        <select name="trangThai" class="form-select">
+                            <option value="">-- Tất cả --</option>
+                            <option value="Đang xử lý" selected="@(Model.TrangThai == "Đang xử lý")">Đang xử lý</option>
+                            <option value="Đã xử lý" selected="@(Model.TrangThai == "Đã xử lý")">Đã xử lý</option>
+                            <option value="Hoàn thành" selected="@(Model.TrangThai == "Hoàn thành")">Hoàn thành</option>
+                            <option value="Hủy" selected="@(Model.TrangThai == "Hủy")">Hủy</option>
+                        </select>
+                    </div>
+
+                    <!-- Khoảng ngày -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Ngày đặt hàng</label>
+                        <div class="row">
+                            <div class="col-6">
+                                <input type="date" name="ngayTu" value="@(Model.TuNgay?.ToString("yyyy-MM-dd"))" class="form-control" />
+                                <small class="text-muted">Từ ngày</small>
+                            </div>
+                            <div class="col-6">
+                                <input type="date" name="ngayDen" value="@(Model.DenNgay?.ToString("yyyy-MM-dd"))" class="form-control" />
+                                <small class="text-muted">Đến ngày</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tổng tiền -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Tổng tiền</label>
+                        <div class="row">
+                            <div class="col-6">
+                                <input type="number" step="1000" name="tongTienTu" value="@Model.TongTienTu" placeholder="Từ..." class="form-control" />
+                            </div>
+                            <div class="col-6">
+                                <input type="number" step="1000" name="tongTienDen" value="@Model.TongTienDen" placeholder="Đến..." class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-search me-2"></i>Lọc đơn hàng
+                    </button>
+                    <a asp-action="LocDonHang" class="btn btn-outline-secondary w-100 mt-2">
+                        <i class="fas fa-redo me-2"></i>Đặt lại
+                    </a>
+                </form>
+            </div>
         </div>
+    </div>
 
-        <!-- Tên sản phẩm -->
-        <div class="border-bottom mb-4 pb-4">
-            <h5 class="font-weight-semi-bold mb-3">Tên sản phẩm</h5>
-            <input type="text" name="tenSp" value="@Model.TenSp" class="form-control mb-2 w-100" placeholder="Nhập tên sản phẩm..." />
+    <!-- Results Panel -->
+    <div class="col-md-9">
+        <div class="admin-card">
+            <div class="admin-card-header">
+                <h5 class="mb-0">Kết quả lọc</h5>
+                <span class="badge bg-primary">@Model.KetQua.TotalItemCount đơn hàng</span>
+            </div>
+            <div class="admin-card-body">
+                @if (Model.KetQua.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Mã đơn</th>
+                                    <th>Khách hàng</th>
+                                    <th>Ngày đặt</th>
+                                    <th>Tổng tiền</th>
+                                    <th>Trạng thái</th>
+                                    <th>Sản phẩm</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var dh in Model.KetQua)
+                                {
+                                    <tr>
+                                        <td><span class="badge bg-secondary">@stt</span></td>
+                                        <td><strong class="text-primary">#@dh.MaDh</strong></td>
+                                        <td>@(dh.MaNdNavigation?.TenDangNhap ?? "Khách vãng lai")</td>
+                                        <td>@dh.NgayDatHang?.ToString("dd/MM/yyyy HH:mm")</td>
+                                        <td><span class="fw-bold text-success">@dh.TongTien?.ToString("N0") VNĐ</span></td>
+                                        <td>
+                                            @{
+                                                string statusClass = dh.TrangThai switch
+                                                {
+                                                    "Chờ xử lý" => "bg-warning",
+                                                    "Đang xử lý" => "bg-info",
+                                                    "Đang giao" => "bg-primary",
+                                                    "Đã giao" => "bg-success",
+                                                    "Đã hủy" => "bg-danger",
+                                                    _ => "bg-secondary"
+                                                };
+                                            }
+                                            <span class="badge @statusClass">@dh.TrangThai</span>
+                                        </td>
+                                        <td>
+                                            @{
+                                                var tenSps = dh.ChiTietDonHangs
+                                                ?.Select(ct => ct.MaSpNavigation?.TenSp)
+                                                ?.Where(t => !string.IsNullOrEmpty(t))
+                                                ?.Distinct()
+                                                ?.ToList();
+
+                                                var hienThiTenSp = tenSps != null && tenSps.Any() ? string.Join(", ", tenSps) : "Chưa có sản phẩm";
+                                            }
+                                            <small class="text-muted">@hienThiTenSp</small>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <a asp-action="XemChiTietDonHang" asp-route-id="@dh.MaDh" class="btn btn-sm btn-info" title="Chi tiết">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a asp-action="SuaDonHang" asp-route-id="@dh.MaDh" class="btn btn-sm btn-warning" title="Sửa">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    stt++;
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="d-flex justify-content-center mt-4">
+                        @Html.PagedListPager(Model.KetQua, page => Url.Action("LocDonHang", new
+                        {
+                            page,
+                            maDh = Model.MaDh,
+                            tenSp = Model.TenSp,
+                            trangThai = Model.TrangThai,
+                            ngayTu = Model.TuNgay?.ToString("yyyy-MM-dd"),
+                            ngayDen = Model.DenNgay?.ToString("yyyy-MM-dd"),
+                            tongTienTu = Model.TongTienTu,
+                            tongTienDen = Model.TongTienDen,
+                            tuKhoa = Model.TuKhoa
+                        }), new PagedListRenderOptions
+                        {
+                            DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                            DisplayLinkToNextPage = PagedListDisplayMode.Always,
+                            UlElementClasses = new[] { "pagination" },
+                            LiElementClasses = new[] { "page-item" },
+                            PageClasses = new[] { "page-link" }
+                        })
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-5">
+                        <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">Không tìm thấy đơn hàng nào</h5>
+                        <p class="text-muted">Vui lòng thử lại với điều kiện lọc khác</p>
+                    </div>
+                }
+            </div>
         </div>
-
-        <!-- Tên người đặt -->
-        <div class="border-bottom mb-4 pb-4">
-            <h5 class="font-weight-semi-bold mb-3">Tên đăng nhập</h5>
-            <input type="text" name="tuKhoa" value="@Model.TuKhoa" class="form-control mb-2 w-100" placeholder="Nhập tên người đặt..." />
-        </div>
-
-        <!-- Trạng thái -->
-        <div class="border-bottom mb-4 pb-4">
-            <h5 class="font-weight-semi-bold mb-3">Trạng thái</h5>
-            <select name="trangThai" class="form-control mb-2 w-100">
-                <option value="">-- Tất cả --</option>
-                <option value="Đang xử lý" @(Model.TrangThai == "Đang xử lý" ? "selected" : "")>Đang xử lý</option>
-                <option value="Đã xử lý" @(Model.TrangThai == "Đã xử lý" ? "selected" : "")>Đã xử lý</option>
-                <option value="Hoàn thành" @(Model.TrangThai == "Hoàn thành" ? "selected" : "")>Hoàn thành</option>
-                <option value="Hủy" @(Model.TrangThai == "Hủy" ? "selected" : "")>Hủy</option>
-            </select>
-        </div>
-
-        <!-- Khoảng ngày -->
-        <div class="border-bottom mb-4 pb-4">
-            <h5 class="font-weight-semi-bold mb-3">Ngày đặt hàng</h5>
-            <input type="date" name="ngayTu" value="@(Model.TuNgay?.ToString("yyyy-MM-dd"))" class="form-control mb-2 w-100" />
-            <input type="date" name="ngayDen" value="@(Model.DenNgay?.ToString("yyyy-MM-dd"))" class="form-control mb-2 w-100" />
-        </div>
-
-        <!-- Tổng tiền -->
-        <div class="border-bottom pb-4">
-            <h5 class="font-weight-semi-bold mb-3">Tổng tiền</h5>
-            <input type="number" step="1000" name="tongTienTu" value="@Model.TongTienTu" placeholder="Từ..." class="form-control mb-2 w-100" />
-            <input type="number" step="1000" name="tongTienDen" value="@Model.TongTienDen" placeholder="Đến..." class="form-control mb-2 w-100" />
-        </div>
-
-        <div class="text-start mt-3">
-            <button type="submit" class="btn btn-primary">Lọc đơn hàng</button>
-        </div>
-    </form>
-}
-
-<table class="table table-bordered text-center">
-    <thead class="table-success">
-        <tr>
-            <th>STT</th>
-            <th>Mã đơn</th>
-            <th>Người đặt</th>
-            <th>Ngày đặt</th>
-            <th>Tổng tiền</th>
-            <th>Trạng thái</th>
-            <th>Sản Phẩm</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var dh in Model.KetQua)
-        {
-            <tr>
-                <td>@stt</td>
-                <td>@dh.MaDh</td>
-                <td>@dh.MaNdNavigation?.TenDangNhap</td>
-                <td>@dh.NgayDatHang?.ToString("dd/MM/yyyy HH:mm")</td>
-                <td>@dh.TongTien?.ToString("N0") VNĐ</td>
-                <td>@dh.TrangThai</td>
-                <td>
-                    @{
-                        var tenSps = dh.ChiTietDonHangs
-                        ?.Select(ct => ct.MaSpNavigation?.TenSp)
-                        ?.Where(t => !string.IsNullOrEmpty(t))
-                        ?.Distinct()
-                        ?.ToList();
-
-                        var hienThiTenSp = tenSps != null ? string.Join(", ", tenSps) : "Không có sản phẩm";
-                    }
-                    @hienThiTenSp
-                </td>
-            </tr>
-            stt++;
-        }
-    </tbody>
-</table>
-
-<div class="text-center mt-4">
-    @Html.PagedListPager(Model.KetQua, page => Url.Action("LocDonHang", new
-        {
-            page,
-            maDh = Model.MaDh,
-            tenSp = Model.TenSp,
-            trangThai = Model.TrangThai,
-            ngayTu = Model.TuNgay?.ToString("yyyy-MM-dd"),
-            ngayDen = Model.DenNgay?.ToString("yyyy-MM-dd"),
-            tongTienTu = Model.TongTienTu,
-            tongTienDen = Model.TongTienDen,
-            tuKhoa = Model.TuKhoa
-        }), new PagedListRenderOptions
-{
-    DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
-    DisplayLinkToNextPage = PagedListDisplayMode.Always,
-    UlElementClasses = new[] { "pagination justify-content-center" },
-    LiElementClasses = new[] { "page-item" },
-    PageClasses = new[] { "page-link" }
-})
+    </div>
 </div>

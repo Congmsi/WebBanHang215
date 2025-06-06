@@ -56,7 +56,7 @@ public partial class WebBanHangCong215Context : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 
-        => optionsBuilder.UseSqlServer("Data Source=MSI;Initial Catalog=WebBanHangCong215;Integrated Security=True;Trust Server Certificate=True");
+        => optionsBuilder.UseSqlServer("Data Source=MACDUONG;Initial Catalog=WebBanHangCong215;Integrated Security=True;Trust Server Certificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
