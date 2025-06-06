@@ -19,14 +19,99 @@ namespace WebBanHang215.Areas.admin.Controllers
         public HomeAdminController()
         {
             _context = new WebBanHangCong215Context();
-        }
-
-        [HttpGet]
+        }        [HttpGet]
         [Route("")]
         [Route("admin")]
         public IActionResult Index()
         {
-            return View();
+            var viewModel = new DashboardViewModel();
+
+            // 1. Tổng số sản phẩm
+            viewModel.TongSanPham = _context.SanPhams.Count();
+
+            // 2. Đơn hàng mới (trạng thái "Đang xử lý")
+            viewModel.DonHangMoi = _context.DonHangs
+                .Where(dh => dh.TrangThai == "Đang xử lý")
+                .Count();
+
+            // 3. Sản phẩm sắp hết (tổng số lượng tồn < 10)
+            viewModel.SanPhamSapHet = _context.ChiTietSanPhams
+                .GroupBy(ct => ct.MaSp)
+                .Where(g => g.Sum(x => x.SoLuongTon ?? 0) < 10)
+                .Count();
+
+            // 4. Doanh thu tháng hiện tại
+            var currentMonth = DateTime.Now.Month;
+            var currentYear = DateTime.Now.Year;
+            viewModel.DoanhThuThang = _context.DonHangs
+                .Where(dh => dh.NgayDatHang.HasValue &&
+                            dh.NgayDatHang.Value.Month == currentMonth &&
+                            dh.NgayDatHang.Value.Year == currentYear &&
+                            dh.TrangThai != "Hủy")
+                .Sum(dh => dh.TongTien ?? 0);            // 5. Đơn hàng gần đây (5 đơn mới nhất)
+            var donHangQuery = _context.DonHangs
+                .Include(dh => dh.MaNdNavigation)
+                .OrderByDescending(dh => dh.NgayDatHang)
+                .Take(5)
+                .Select(dh => new
+                {
+                    MaDonHang = dh.MaDh.ToString(),
+                    TenKhachHang = dh.MaNdNavigation.TenDangNhap ?? "Không có tên",
+                    TongTien = dh.TongTien ?? 0,
+                    TrangThai = dh.TrangThai ?? "Không xác định",
+                    NgayDat = dh.NgayDatHang ?? DateTime.Now
+                })
+                .ToList();
+
+            viewModel.DonHangGanDay = donHangQuery
+                .Select(dh => new DonHangGanDayItem
+                {
+                    MaDonHang = dh.MaDonHang,
+                    TenKhachHang = dh.TenKhachHang,
+                    TongTien = dh.TongTien,
+                    TrangThai = dh.TrangThai,
+                    NgayDat = dh.NgayDat,
+                    MauTrangThai = GetStatusColor(dh.TrangThai)
+                })
+                .ToList();
+
+            // 6. Hoạt động gần đây
+            viewModel.HoatDongGanDay = new List<HoatDongGanDayItem>
+            {
+                new HoatDongGanDayItem
+                {
+                    TieuDe = $"Có {viewModel.DonHangMoi} đơn hàng mới cần xử lý",
+                    ThoiGian = "Vừa xong",
+                    Icon = "fas fa-shopping-cart",
+                    MauIcon = "text-success"
+                },
+                new HoatDongGanDayItem
+                {
+                    TieuDe = $"Cảnh báo: {viewModel.SanPhamSapHet} sản phẩm sắp hết hàng",
+                    ThoiGian = "5 phút trước",
+                    Icon = "fas fa-exclamation-triangle",
+                    MauIcon = "text-warning"
+                },
+                new HoatDongGanDayItem
+                {
+                    TieuDe = "Doanh thu tháng đạt " + viewModel.DoanhThuThang.ToString("N0") + " VNĐ",
+                    ThoiGian = "Hôm nay",
+                    Icon = "fas fa-chart-line",
+                    MauIcon = "text-info"
+                }
+            };
+
+            return View(viewModel);
+        }        private static string GetStatusColor(string? status)
+        {
+            return status switch
+            {
+                "Đang xử lý" => "warning",
+                "Đã xử lý" => "info", 
+                "Hoàn thành" => "success",
+                "Hủy" => "danger",
+                _ => "secondary"
+            };
         }
 
         [HttpGet]

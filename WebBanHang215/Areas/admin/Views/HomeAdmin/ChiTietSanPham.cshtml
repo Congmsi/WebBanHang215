@@ -2,66 +2,166 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "Chi tiết sản phẩm";
-    Layout = "~/Areas/admin/Views/_LayoutAdmin.cshtml";
+    Layout = "~/Areas/admin/Views/_LayoutCustomAdmin.cshtml";
 }
 
-<h2 class="text-danger fw-bold mb-3">Chi tiết sản phẩm</h2>
-
-<div class="mb-4">
-    <h4 class="text-primary">Thông tin sản phẩm:</h4>
-    <p><strong>Tên sản phẩm:</strong> @Model.TenSp</p>
-    <p><strong>Mô tả:</strong> @Model.MoTa</p>
-    <p><strong>Giá bán:</strong> @Model.Gia?.ToString("N0") VNĐ</p>
-    <p><strong>Giá khuyến mãi:</strong> @Model.GiaKhuyenMai?.ToString("N0") VNĐ</p>
-    <p><strong>Loại:</strong> @Model.TenLoai</p>
-    <p><strong>Hãng:</strong> @Model.TenHang</p>
-    <p><strong>Giới tính:</strong> @Model.TenGioiTinh</p>
-    <p><strong>Trạng thái:</strong> @Model.TenTrangThai</p>
-    <p><strong>Nhà cung cấp:</strong> @Model.TenNcc</p>
+<!-- Page Header -->
+<div class="page-header">
+    <h1 class="page-title">Chi tiết sản phẩm</h1>
+    <p class="page-subtitle">Xem thông tin chi tiết sản phẩm và quản lý tồn kho</p>
 </div>
 
-<div class="mb-4">
-    <h4 class="text-primary">Hình ảnh:</h4>
-    <div class="d-flex flex-wrap gap-2">
-        @if (Model.UrlAnh != null && Model.UrlAnh.Any())
+<div class="row">
+    <!-- Product Information -->
+    <div class="col-md-8">
+        <div class="admin-card">
+            <div class="admin-card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>Thông tin sản phẩm
+                </h5>
+            </div>
+            <div class="admin-card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="fw-semibold text-muted">Tên sản phẩm:</label>
+                            <div class="fs-5 fw-bold text-primary">@Model.TenSp</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="fw-semibold text-muted">Mô tả:</label>
+                            <div class="text-dark">@Model.MoTa</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="fw-semibold text-muted">Loại sản phẩm:</label>
+                            <div><span class="badge bg-info">@Model.TenLoai</span></div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="fw-semibold text-muted">Hãng:</label>
+                            <div><span class="badge bg-secondary">@Model.TenHang</span></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="fw-semibold text-muted">Giá bán:</label>
+                            <div class="fs-5 fw-bold text-success">@Model.Gia?.ToString("N0") VNĐ</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="fw-semibold text-muted">Giá khuyến mãi:</label>
+                            <div class="fs-6 fw-bold text-danger">
+                                @if (Model.GiaKhuyenMai.HasValue && Model.GiaKhuyenMai > 0)
+                                {
+                                    @Model.GiaKhuyenMai?.ToString("N0") <span>VNĐ</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">Không có</span>
+                                }
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="fw-semibold text-muted">Giới tính:</label>
+                            <div><span class="badge bg-warning">@Model.TenGioiTinh</span></div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="fw-semibold text-muted">Trạng thái:</label>
+                            <div><span class="badge bg-success">@Model.TenTrangThai</span></div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="fw-semibold text-muted">Nhà cung cấp:</label>
+                            <div><span class="badge bg-primary">@Model.TenNcc</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Images -->
+    <div class="col-md-4">
+        <div class="admin-card">
+            <div class="admin-card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-images me-2"></i>Hình ảnh sản phẩm
+                </h5>
+            </div>
+            <div class="admin-card-body">
+                @if (Model.UrlAnh != null && Model.UrlAnh.Any())
+                {
+                    <div class="row g-2">
+                        @foreach (var url in Model.UrlAnh)
+                        {
+                            <div class="col-6">
+                                <img src="@url" alt="Ảnh sản phẩm" class="img-fluid rounded shadow-sm" style="height: 100px; object-fit: cover; width: 100%;" />
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-4">
+                        <i class="fas fa-image fa-3x text-muted mb-2"></i>
+                        <p class="text-muted">Chưa có hình ảnh</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Stock Details -->
+<div class="admin-card mt-4">
+    <div class="admin-card-header">
+        <h5 class="mb-0">
+            <i class="fas fa-warehouse me-2"></i>Chi tiết size - màu - tồn kho
+        </h5>
+    </div>
+    <div class="admin-card-body">
+        @if (Model.ChiTietSanPham != null && Model.ChiTietSanPham.Any())
         {
-            foreach (var url in Model.UrlAnh)
-            {
-                <img src="@url" alt="Ảnh sản phẩm" class="img-thumbnail" style="width: 120px;" />
-            }
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th><i class="fas fa-ruler me-1"></i>Size</th>
+                            <th><i class="fas fa-palette me-1"></i>Màu sắc</th>
+                            <th><i class="fas fa-boxes me-1"></i>Số lượng tồn</th>
+                            <th><i class="fas fa-calendar me-1"></i>Ngày nhập</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var ct in Model.ChiTietSanPham)
+                        {
+                            <tr>
+                                <td><span class="badge bg-secondary">@ct.TenSize</span></td>
+                                <td><span class="badge bg-info">@ct.TenMau</span></td>
+                                <td>
+                                    <span class="badge @(ct.SoLuongTon > 10 ? "bg-success" : (ct.SoLuongTon > 0 ? "bg-warning" : "bg-danger"))">
+                                        @ct.SoLuongTon
+                                    </span>
+                                </td>
+                                <td class="text-muted">@ct.NgayNhap?.ToString("dd/MM/yyyy")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         }
         else
         {
-            <p>Không có ảnh.</p>
+            <div class="text-center py-4">
+                <i class="fas fa-box-open fa-3x text-muted mb-2"></i>
+                <p class="text-muted">Chưa có thông tin chi tiết về tồn kho</p>
+            </div>
         }
     </div>
 </div>
 
-<div class="mt-4">
-    <h5>Chi tiết size – màu – tồn kho</h5>
-    <table class="table table-bordered">
-        <thead class="table-info text-center">
-            <tr>
-                <th>Size</th>
-                <th>Màu</th>
-                <th>Số lượng tồn</th>
-                <th>Ngày nhập</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var ct in Model.ChiTietSanPham)
-            {
-                <tr class="text-center">
-                    <td>@ct.TenSize</td>
-                    <td>@ct.TenMau</td>
-                    <td>@ct.SoLuongTon</td>
-                    <td>@ct.NgayNhap?.ToString("dd/MM/yyyy")</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
-
-<div class="text-end mt-3">
-    <a asp-action="DanhMucSanPham" asp-area="admin" asp-controller="HomeAdmin" class="btn btn-secondary">Quay lại</a>
+<!-- Action Buttons -->
+<div class="text-end mt-4">
+    <a asp-action="DanhMucSanPham" asp-area="admin" asp-controller="HomeAdmin" class="btn btn-secondary">
+        <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách
+    </a>
+    <a asp-action="SuaSanPham" asp-area="admin" asp-controller="HomeAdmin" asp-route-id="@Model.MaSp" class="btn btn-primary ms-2">
+        <i class="fas fa-edit me-2"></i>Chỉnh sửa
+    </a>
 </div>

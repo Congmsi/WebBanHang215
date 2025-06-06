@@ -1,36 +1,71 @@
 ﻿@model WebBanHang215.Areas.admin.ViewModels.PhieuNhapEditViewModel
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
 @{
     ViewData["Title"] = "Sửa phiếu nhập";
-    Layout = "~/Areas/admin/Views/_LayoutAdmin.cshtml";
+    Layout = "~/Areas/admin/Views/_LayoutCustomAdmin.cshtml";
 }
 
-<h2 class="text-center mb-4">Sửa phiếu nhập</h2>
+<!-- Page Header -->
+<div class="page-header">
+    <h1 class="page-title">Sửa phiếu nhập</h1>
+    <p class="page-subtitle">Cập nhật thông tin phiếu nhập kho</p>
+</div>
 
-<form asp-action="SuaPhieuNhap" asp-controller="DonHang" asp-area="admin" method="post" class="w-75 mx-auto">
-    @Html.AntiForgeryToken()
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="admin-card">
+            <div class="admin-card-header">
+                <h5 class="mb-0"><i class="fas fa-edit me-2"></i>Thông tin phiếu nhập</h5>
+            </div>
+            <div class="admin-card-body">
+                <form asp-action="SuaPhieuNhap" asp-controller="DonHang" asp-area="admin" method="post">                    @Html.AntiForgeryToken()
 
-    <div class="mb-3">
-        <label asp-for="MaPhieuNhap" class="form-label"></label>
-        <input asp-for="MaPhieuNhap" class="form-control" readonly />
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="MaPhieuNhap" class="form-label">Mã phiếu nhập</label>
+                            <input asp-for="MaPhieuNhap" class="form-control" readonly />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="NgayNhap" class="form-label">Ngày nhập</label>
+                            <input asp-for="NgayNhap" class="form-control" type="date" />
+                            <span asp-validation-for="NgayNhap" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="MaNcc" class="form-label">Nhà cung cấp</label>
+                            <select asp-for="MaNcc" asp-items="Model.NhaCungCapList" class="form-control">
+                                <option value="">-- Chọn nhà cung cấp --</option>
+                            </select>
+                            <span asp-validation-for="MaNcc" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Tổng tiền</label>
+                            <input type="text" value="@Model.TongTien.ToString("N0") VNĐ" class="form-control" readonly />
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="GhiChu" class="form-label">Ghi chú</label>
+                        <textarea asp-for="GhiChu" class="form-control" rows="3" placeholder="Nhập ghi chú..."></textarea>
+                        <span asp-validation-for="GhiChu" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a asp-action="DanhSachPhieuNhap" asp-controller="DonHang" asp-area="admin" class="btn btn-outline-secondary me-md-2">
+                            <i class="fas fa-arrow-left me-2"></i>Quay lại
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Lưu thay đổi
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-
-    <div class="mb-3">
-        <label asp-for="NgayNhap" class="form-label"></label>
-        <input asp-for="NgayNhap" class="form-control" type="date" />
-        <span asp-validation-for="NgayNhap" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="GhiChu" class="form-label"></label>
-        <textarea asp-for="GhiChu" class="form-control"></textarea>
-    </div>
-
-    <div class="text-center">
-        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-        <a asp-action="DanhSachPhieuNhap" asp-controller="DonHang" asp-area="admin" class="btn btn-secondary">Quay lại</a>
-    </div>
-</form>
+</div>
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")

@@ -1,8 +1,200 @@
-﻿
+﻿@model WebBanHang215.Areas.admin.ViewModels.DashboardViewModel
 @{
-    ViewData["Title"] = "Index";
-    Layout = "~/Areas/admin/Views/_LayoutAdmin.cshtml";
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Areas/admin/Views/_LayoutCustomAdmin.cshtml";
 }
 
-<h1>Index Admin</h1>
+<!-- Page Header -->
+<div class="page-header">
+    <h1 class="page-title">Dashboard</h1>
+    <p class="page-subtitle">Tổng quan về hệ thống CongShop</p>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="admin-card">
+            <div class="admin-card-body text-center">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h3 class="text-primary mb-1">@Model.TongSanPham</h3>
+                        <p class="text-muted mb-0">Tổng sản phẩm</p>
+                    </div>
+                    <div class="text-primary">
+                        <i class="fas fa-box fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="admin-card">
+            <div class="admin-card-body text-center">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h3 class="text-success mb-1">@Model.DonHangMoi</h3>
+                        <p class="text-muted mb-0">Đơn hàng mới</p>
+                    </div>
+                    <div class="text-success">
+                        <i class="fas fa-shopping-cart fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="admin-card">
+            <div class="admin-card-body text-center">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h3 class="text-warning mb-1">@Model.SanPhamSapHet</h3>
+                        <p class="text-muted mb-0">Sản phẩm sắp hết</p>
+                    </div>
+                    <div class="text-warning">
+                        <i class="fas fa-exclamation-triangle fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="admin-card">
+            <div class="admin-card-body text-center">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h3 class="text-danger mb-1">@Model.DoanhThuThang.ToString("N0")</h3>
+                        <p class="text-muted mb-0">Doanh thu tháng (VNĐ)</p>
+                    </div>
+                    <div class="text-danger">
+                        <i class="fas fa-chart-line fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="admin-card">
+            <div class="admin-card-header">
+                <h5 class="mb-0">Thao tác nhanh</h5>
+            </div>
+            <div class="admin-card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <a href="@Url.Action("ThemSanPhamMoi", "HomeAdmin", new { area = "admin" })" class="btn btn-primary w-100">
+                            <i class="fas fa-plus me-2"></i>Thêm sản phẩm
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="@Url.Action("Index", "DonHang", new { area = "admin" })" class="btn btn-success w-100">
+                            <i class="fas fa-shopping-cart me-2"></i>Quản lý đơn hàng
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="@Url.Action("ThongKeTonKho", "TonKho", new { area = "admin" })" class="btn btn-warning w-100">
+                            <i class="fas fa-warehouse me-2"></i>Kiểm tra tồn kho
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <a href="@Url.Action("DanhSachPhieuNhap", "DonHang", new { area = "admin" })" class="btn btn-info w-100">
+                            <i class="fas fa-truck me-2"></i>Phiếu nhập kho
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Data -->
+<div class="row">
+    <!-- Recent Orders -->
+    <div class="col-lg-8 mb-4">
+        <div class="admin-card">
+            <div class="admin-card-header">
+                <h5 class="mb-0">Đơn hàng gần đây</h5>
+            </div>
+            <div class="admin-card-body">
+                @if (Model.DonHangGanDay != null && Model.DonHangGanDay.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Mã đơn hàng</th>
+                                    <th>Khách hàng</th>
+                                    <th>Tổng tiền</th>
+                                    <th>Trạng thái</th>
+                                    <th>Ngày đặt</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var donHang in Model.DonHangGanDay)
+                                {
+                                    <tr>
+                                        <td><strong>#@donHang.MaDonHang</strong></td>
+                                        <td>@donHang.TenKhachHang</td>
+                                        <td>@donHang.TongTien.ToString("N0") VNĐ</td>
+                                        <td>
+                                            <span class="badge bg-@donHang.MauTrangThai">@donHang.TrangThai</span>
+                                        </td>
+                                        <td>@donHang.NgayDat.ToString("dd/MM/yyyy HH:mm")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-4">
+                        <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Chưa có đơn hàng nào</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activities -->
+    <div class="col-lg-4 mb-4">
+        <div class="admin-card">
+            <div class="admin-card-header">
+                <h5 class="mb-0">Hoạt động gần đây</h5>
+            </div>
+            <div class="admin-card-body">
+                @if (Model.HoatDongGanDay != null && Model.HoatDongGanDay.Any())
+                {
+                    <div class="activity-list">
+                        @foreach (var hoatDong in Model.HoatDongGanDay)
+                        {
+                            <div class="activity-item d-flex align-items-start mb-3">
+                                <div class="activity-icon me-3">
+                                    <i class="@hoatDong.Icon @hoatDong.MauIcon"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <p class="mb-1">@hoatDong.TieuDe</p>
+                                    <small class="text-muted">@hoatDong.ThoiGian</small>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-4">
+                        <i class="fas fa-bell fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Không có hoạt động nào</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
 

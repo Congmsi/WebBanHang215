@@ -3,36 +3,101 @@
 
 @{
     ViewData["Title"] = "Xóa chi tiết phiếu nhập";
-    Layout = "~/Areas/admin/Views/_LayoutAdmin.cshtml";
+    Layout = "~/Areas/admin/Views/_LayoutCustomAdmin.cshtml";
 }
 
-<div class="text-center my-4">
-    <h2 class="text-danger">Xác nhận xóa chi tiết phiếu nhập</h2>
+<!-- Page Header -->
+<div class="page-header">
+    <h1 class="page-title text-danger">
+        <i class="fas fa-exclamation-triangle me-2"></i>Xác nhận xóa
+    </h1>
+    <p class="page-subtitle">Bạn có chắc chắn muốn xóa chi tiết phiếu nhập này không?</p>
 </div>
 
-<div class="card p-4 shadow">
-    <dl class="row">
-        <dt class="col-sm-4">Mã chi tiết nhập</dt>
-        <dd class="col-sm-8">@Model.MaChiTietNk</dd>
-
-        <dt class="col-sm-4">Mã phiếu nhập</dt>
-        <dd class="col-sm-8">@Model.MaPhieuNhap</dd>
-
-        <dt class="col-sm-4">Mã sản phẩm</dt>
-        <dd class="col-sm-8">@Model.MaSp</dd>
-
-        <dt class="col-sm-4">Số lượng</dt>
-        <dd class="col-sm-8">@Model.SoLuong</dd>
-
-        <dt class="col-sm-4">Đơn giá nhập</dt>
-        <dd class="col-sm-8">@Model.DonGiaNhap.ToString("N0")</dd>
-    </dl>
-
-    <form asp-action="XoaChiTietPhieuNhap" method="post">
-        <input type="hidden" name="id" value="@Model.MaChiTietNk" />
-        <div class="d-flex justify-content-between mt-4">
-            <a asp-action="DanhSachChiTietPhieuNhap" asp-route-maPhieuNhap="@Model.MaPhieuNhap" class="btn btn-secondary">← Hủy</a>
-            <button type="submit" class="btn btn-danger">🗑️ Xóa</button>
+<div class="admin-card">
+    <div class="admin-card-header bg-danger text-white">
+        <h5 class="mb-0">
+            <i class="fas fa-trash me-2"></i>Thông tin chi tiết cần xóa
+        </h5>
+    </div>
+    <div class="admin-card-body">
+        <!-- Warning Alert -->
+        <div class="alert alert-warning" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <strong>Cảnh báo!</strong> Thao tác này không thể hoàn tác. Dữ liệu sẽ bị xóa vĩnh viễn.
         </div>
-    </form>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <!-- Import Details -->
+                <div class="info-group mb-4">
+                    <div class="info-item">
+                        <span class="info-label">
+                            <i class="fas fa-barcode me-2"></i>Mã chi tiết nhập:
+                        </span>
+                        <span class="info-value fw-bold text-primary">#@Model.MaChiTietNk</span>
+                    </div>
+                    
+                    <div class="info-item">
+                        <span class="info-label">
+                            <i class="fas fa-file-import me-2"></i>Mã phiếu nhập:
+                        </span>
+                        <span class="info-value">#@Model.MaPhieuNhap</span>
+                    </div>
+                    
+                    <div class="info-item">
+                        <span class="info-label">
+                            <i class="fas fa-box me-2"></i>Mã sản phẩm:
+                        </span>
+                        <span class="info-value">@Model.MaSp</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <!-- Quantity and Price Details -->
+                <div class="info-group mb-4">
+                    <div class="info-item">
+                        <span class="info-label">
+                            <i class="fas fa-sort-numeric-up me-2"></i>Số lượng:
+                        </span>
+                        <span class="info-value">
+                            <span class="badge bg-info fs-6">@Model.SoLuong</span>
+                        </span>
+                    </div>
+                    
+                    <div class="info-item">
+                        <span class="info-label">
+                            <i class="fas fa-dollar-sign me-2"></i>Đơn giá nhập:
+                        </span>
+                        <span class="info-value fw-bold text-success">@Model.DonGiaNhap.ToString("N0") VNĐ</span>
+                    </div>
+                    
+                    <div class="info-item">
+                        <span class="info-label">
+                            <i class="fas fa-calculator me-2"></i>Tổng giá trị:
+                        </span>
+                        <span class="info-value fw-bold text-danger">
+                            @((Model.SoLuong * Model.DonGiaNhap).ToString("N0")) VNĐ
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <form asp-action="XoaChiTietPhieuNhap" method="post">
+            <input type="hidden" name="id" value="@Model.MaChiTietNk" />
+            
+            <!-- Action Buttons -->
+            <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+                <a asp-action="DanhSachChiTietPhieuNhap" asp-route-maPhieuNhap="@Model.MaPhieuNhap" class="btn btn-outline-secondary">
+                    <i class="fas fa-times me-2"></i>Hủy bỏ
+                </a>
+                
+                <button type="submit" class="btn btn-danger btn-lg" onclick="return confirm('Bạn có chắc chắn muốn xóa chi tiết phiếu nhập này không?')">
+                    <i class="fas fa-trash me-2"></i>Xác nhận xóa
+                </button>
+            </div>
+        </form>
+    </div>
 </div>

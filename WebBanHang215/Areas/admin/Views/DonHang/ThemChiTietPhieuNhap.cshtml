@@ -3,44 +3,104 @@
 
 @{
     ViewData["Title"] = "Thêm chi tiết phiếu nhập";
-    Layout = "~/Areas/admin/Views/_LayoutAdmin.cshtml";
+    Layout = "~/Areas/admin/Views/_LayoutCustomAdmin.cshtml";
 }
 
-<h2 class="text-center mb-4">Thêm chi tiết phiếu nhập</h2>
+<!-- Page Header -->
+<div class="page-header">
+    <h1 class="page-title">Thêm chi tiết phiếu nhập</h1>
+    <p class="page-subtitle">Thêm sản phẩm mới vào phiếu nhập #@Model.MaPhieuNhap</p>
+</div>
 
-<form asp-action="ThemChiTietPhieuNhap" method="post" class="w-50 mx-auto">
-
-    <div class="form-group mb-3">
-        <label>Mã phiếu nhập</label>
-        <input type="text" class="form-control" value="@Model.MaPhieuNhap" readonly />
-        <input type="hidden" asp-for="MaPhieuNhap" />
+<div class="admin-card">
+    <div class="admin-card-header">
+        <h5 class="mb-0">
+            <i class="fas fa-plus-circle me-2"></i>Thông tin sản phẩm
+        </h5>
     </div>
+    <div class="admin-card-body">
+        <form asp-action="ThemChiTietPhieuNhap" method="post">
+            <input type="hidden" asp-for="MaPhieuNhap" />
 
-    <div class="form-group mb-3">
-        <label asp-for="MaSp"></label>
-        <select asp-for="MaSp" asp-items="Model.SanPhamList" class="form-control"></select>
-        <span asp-validation-for="MaSp" class="text-danger"></span>
+            <!-- Error summary with icon -->
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger d-none" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <strong>Có lỗi xảy ra:</strong>
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <!-- Product Selection -->
+                    <div class="mb-4">
+                        <label asp-for="MaSp" class="form-label">
+                            <i class="fas fa-box me-2"></i>Sản phẩm <span class="text-danger">*</span>
+                        </label>
+                        <select asp-for="MaSp" asp-items="Model.SanPhamList" class="form-select form-select-lg">
+                            <option value="">-- Chọn sản phẩm --</option>
+                        </select>
+                        <span asp-validation-for="MaSp" class="text-danger"></span>
+                    </div>
+
+                    <!-- Quantity Input -->
+                    <div class="mb-4">
+                        <label asp-for="SoLuong" class="form-label">
+                            <i class="fas fa-sort-numeric-up me-2"></i>Số lượng <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="SoLuong" class="form-control form-control-lg" type="number" min="1" placeholder="Nhập số lượng..." />
+                        <span asp-validation-for="SoLuong" class="text-danger"></span>
+                        <div class="form-text">
+                            <i class="fas fa-info-circle me-1"></i>Nhập số lượng sản phẩm nhập kho
+                        </div>
+                    </div>
+
+                    <!-- Unit Price Input -->
+                    <div class="mb-4">
+                        <label asp-for="DonGiaNhap" class="form-label">
+                            <i class="fas fa-dollar-sign me-2"></i>Đơn giá nhập <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="DonGiaNhap" class="form-control form-control-lg" type="number" step="0.01" min="0" placeholder="Nhập đơn giá..." />
+                        <span asp-validation-for="DonGiaNhap" class="text-danger"></span>
+                        <div class="form-text">
+                            <i class="fas fa-info-circle me-1"></i>Giá mua sản phẩm từ nhà cung cấp
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <!-- Import Info Panel -->
+                    <div class="info-panel">
+                        <div class="info-panel-header">
+                            <h6 class="mb-0">
+                                <i class="fas fa-file-import me-2"></i>Thông tin phiếu nhập
+                            </h6>
+                        </div>
+                        <div class="info-panel-body">
+                            <div class="info-item">
+                                <span class="info-label">Mã phiếu nhập:</span>
+                                <span class="info-value">#@Model.MaPhieuNhap</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+                <a asp-action="DanhSachChiTietPhieuNhap" asp-route-maPhieuNhap="@Model.MaPhieuNhap" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Quay lại
+                </a>
+                
+                <button type="submit" class="btn btn-success btn-lg">
+                    <i class="fas fa-save me-2"></i>Lưu chi tiết
+                </button>
+            </div>
+        </form>
     </div>
+</div>
 
-    <div class="form-group mb-3">
-        <label asp-for="SoLuong"></label>
-        <input asp-for="SoLuong" class="form-control" />
-        <span asp-validation-for="SoLuong" class="text-danger"></span>
-    </div>
-
-    <div class="form-group mb-4">
-        <label asp-for="DonGiaNhap"></label>
-        <input asp-for="DonGiaNhap" class="form-control" />
-        <span asp-validation-for="DonGiaNhap" class="text-danger"></span>
-    </div>
-
-    <div class="d-flex justify-content-between">
-        <button type="submit" class="btn btn-success">💾 Lưu chi tiết</button>
-        <a asp-action="DanhSachChiTietPhieuNhap" asp-route-maPhieuNhap="@Model.MaPhieuNhap" class="btn btn-secondary">← Quay lại</a>
-    </div>
-
-</form>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

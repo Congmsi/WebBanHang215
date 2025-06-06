@@ -3,79 +3,211 @@
 
 @{
     ViewData["Title"] = "Chi tiết đơn hàng";
-    Layout = "~/Areas/admin/Views/_LayoutAdmin.cshtml";
+    Layout = "~/Areas/admin/Views/_LayoutCustomAdmin.cshtml";
 }
 
-<h2 class="text-center text-primary mb-4">Chi tiết đơn hàng #@Model.MaDh</h2>
-
-<div class="mb-4">
-    <dl class="row">
-        <dt class="col-sm-3">Người đặt hàng:</dt>
-        <dd class="col-sm-9">@Model.TenDangNhap</dd>
-
-        <dt class="col-sm-3">Ngày đặt hàng:</dt>
-        <dd class="col-sm-9">@Model.NgayDatHang?.ToString("dd/MM/yyyy HH:mm")</dd>
-
-        <dt class="col-sm-3">Tổng tiền:</dt>
-        <dd class="col-sm-9">@Model.TongTien?.ToString("N0") VNĐ</dd>
-
-        <dt class="col-sm-3">Trạng thái đơn hàng:</dt>
-        <dd class="col-sm-9">@Model.TrangThai</dd>
-
-        <dt class="col-sm-3">Địa chỉ giao hàng:</dt>
-        <dd class="col-sm-9">@Model.DiaChiGiaoHang</dd>
-
-        <dt class="col-sm-3">Hình thức thanh toán:</dt>
-        <dd class="col-sm-9">@Model.HinhThucThanhToan</dd>
-
-        <dt class="col-sm-3">Trạng thái thanh toán:</dt>
-        <dd class="col-sm-9">@Model.TrangThaiThanhToan</dd>
-
-        <dt class="col-sm-3">Ngày giao dự kiến:</dt>
-        <dd class="col-sm-9">@Model.NgayGiaoDuKien?.ToString("dd/MM/yyyy")</dd>
-
-        <dt class="col-sm-3">Ngày giao thực tế:</dt>
-        <dd class="col-sm-9">@Model.NgayGiaoThucTe?.ToString("dd/MM/yyyy")</dd>
-    </dl>
+<!-- Page Header -->
+<div class="page-header">
+    <h1 class="page-title">Chi tiết đơn hàng #@Model.MaDh</h1>
+    <p class="page-subtitle">Xem thông tin chi tiết và quản lý đơn hàng</p>
 </div>
 
-<h4 class="text-success">Sản phẩm trong đơn hàng</h4>
-<table class="table table-bordered">
-    <thead class="table-success">
-        <tr>
-            <th>Tên sản phẩm</th>
-            <th>Số lượng</th>
-            <th>Đơn giá</th>
-            <th>Thành tiền</th>
-            <th>Thao tác</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.ChiTietSanPhams)
+<div class="row">
+    <!-- Order Information -->
+    <div class="col-md-8">
+        <div class="admin-card">
+            <div class="admin-card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>Thông tin đơn hàng
+                </h5>
+            </div>
+            <div class="admin-card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="fw-semibold text-muted">Khách hàng:</label>
+                            <div class="fs-5 fw-bold text-primary">@Model.TenDangNhap</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="fw-semibold text-muted">Ngày đặt hàng:</label>
+                            <div>@Model.NgayDatHang?.ToString("dd/MM/yyyy HH:mm")</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="fw-semibold text-muted">Địa chỉ giao hàng:</label>
+                            <div class="text-dark">@Model.DiaChiGiaoHang</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="fw-semibold text-muted">Tổng tiền:</label>
+                            <div class="fs-4 fw-bold text-success">@Model.TongTien?.ToString("N0") VNĐ</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="fw-semibold text-muted">Trạng thái đơn hàng:</label>
+                            <div>
+                                @{
+                                    string statusClass = Model.TrangThai switch
+                                    {
+                                        "Chờ xử lý" => "bg-warning",
+                                        "Đang xử lý" => "bg-info",
+                                        "Đang giao" => "bg-primary",
+                                        "Đã giao" => "bg-success",
+                                        "Đã hủy" => "bg-danger",
+                                        _ => "bg-secondary"
+                                    };
+                                }
+                                <span class="badge @statusClass fs-6">@Model.TrangThai</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment & Delivery Info -->
+    <div class="col-md-4">
+        <div class="admin-card">
+            <div class="admin-card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-credit-card me-2"></i>Thanh toán & Giao hàng
+                </h5>
+            </div>
+            <div class="admin-card-body">
+                <div class="mb-3">
+                    <label class="fw-semibold text-muted">Hình thức thanh toán:</label>
+                    <div><span class="badge bg-info">@Model.HinhThucThanhToan</span></div>
+                </div>
+                <div class="mb-3">
+                    <label class="fw-semibold text-muted">Trạng thái thanh toán:</label>
+                    <div>
+                        @{
+                            string paymentClass = Model.TrangThaiThanhToan switch
+                            {
+                                "Đã thanh toán" => "bg-success",
+                                "Chưa thanh toán" => "bg-warning",
+                                "Thất bại" => "bg-danger",
+                                _ => "bg-secondary"
+                            };
+                        }
+                        <span class="badge @paymentClass">@Model.TrangThaiThanhToan</span>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="fw-semibold text-muted">Giao dự kiến:</label>
+                    <div class="text-info">
+                        @if (Model.NgayGiaoDuKien.HasValue)
+                        {
+                            @Model.NgayGiaoDuKien?.ToString("dd/MM/yyyy")
+                        }
+                        else
+                        {
+                            <span class="text-muted">Chưa xác định</span>
+                        }
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="fw-semibold text-muted">Giao thực tế:</label>
+                    <div class="text-success">
+                        @if (Model.NgayGiaoThucTe.HasValue)
+                        {
+                            <i class="fas fa-check-circle me-1"></i>
+                            @Model.NgayGiaoThucTe?.ToString("dd/MM/yyyy")
+                        }
+                        else
+                        {
+                            <span class="text-muted">Chưa giao</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Products in Order -->
+<div class="admin-card mt-4">
+    <div class="admin-card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">
+            <i class="fas fa-shopping-cart me-2"></i>Sản phẩm trong đơn hàng
+        </h5>
+        <a asp-action="ThemChiTietDonHang" asp-route-maDh="@Model.MaDh" class="btn btn-primary btn-sm">
+            <i class="fas fa-plus me-2"></i>Thêm sản phẩm
+        </a>
+    </div>
+    <div class="admin-card-body">
+        @if (Model.ChiTietSanPhams != null && Model.ChiTietSanPhams.Any())
         {
-            <tr>
-                <td>@item.TenSanPham</td>
-                <td>@item.SoLuong</td>
-                <td>@item.DonGia.ToString("N0") VNĐ</td>
-                <td>@item.ThanhTien.ToString("N0") VNĐ</td>
-                <td>
-                    <a asp-action="SuaChiTietDonHang" asp-controller="DonHang"
-                       asp-route-id="@item.MaChiTiet"
-                       class="btn btn-warning btn-sm">Sửa</a>
-
-                    <a asp-action="XoaChiTietDonHang" asp-controller="DonHang"
-                       asp-route-id="@item.MaChiTiet"
-                       class="btn btn-danger btn-sm">Xóa</a>
-                </td>
-            </tr>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Sản phẩm</th>
+                            <th>Số lượng</th>
+                            <th>Đơn giá</th>
+                            <th>Thành tiền</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.ChiTietSanPhams)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="fw-semibold">@item.TenSanPham</div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-secondary">@item.SoLuong</span>
+                                </td>
+                                <td>
+                                    <span class="text-primary">@item.DonGia.ToString("N0") VNĐ</span>
+                                </td>
+                                <td>
+                                    <span class="fw-bold text-success">@item.ThanhTien.ToString("N0") VNĐ</span>
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a asp-action="SuaChiTietDonHang" asp-controller="DonHang"
+                                           asp-route-id="@item.MaChiTiet"
+                                           class="btn btn-sm btn-outline-primary" title="Chỉnh sửa">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a asp-action="XoaChiTietDonHang" asp-controller="DonHang"
+                                           asp-route-id="@item.MaChiTiet"
+                                           class="btn btn-sm btn-outline-danger" title="Xóa"
+                                           onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         }
+        else
+        {
+            <div class="text-center py-5">
+                <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">Đơn hàng chưa có sản phẩm nào</h5>
+                <p class="text-muted">Vui lòng thêm sản phẩm vào đơn hàng</p>
+                <a asp-action="ThemChiTietDonHang" asp-route-maDh="@Model.MaDh" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Thêm sản phẩm đầu tiên
+                </a>
+            </div>
+        }
+    </div>
+</div>
 
-    </tbody>
-</table>
-
-<div class="mt-4">
-    <a asp-action="ThemChiTietDonHang" asp-route-maDh="@Model.MaDh" class="btn btn-success">➕ Thêm chi tiết sản phẩm</a>
-    <a asp-action="Index" class="btn btn-secondary ms-2">⬅ Quay lại danh sách đơn hàng</a>
+<!-- Action Buttons -->
+<div class="text-end mt-4">
+    <a asp-action="Index" class="btn btn-secondary">
+        <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách
+    </a>
+    <a asp-action="SuaDonHang" asp-route-id="@Model.MaDh" class="btn btn-primary ms-2">
+        <i class="fas fa-edit me-2"></i>Chỉnh sửa đơn hàng
+    </a>
 </div>
 
 @section Scripts {

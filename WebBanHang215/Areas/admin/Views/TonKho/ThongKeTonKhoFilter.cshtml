@@ -3,80 +3,241 @@
 @using X.PagedList
 
 @{
-    ViewData["Title"] = "Thống kê tồn kho";
-    Layout = "~/Areas/admin/Views/TonKho/_LayoutLocTonKho.cshtml";
+    ViewData["Title"] = "Thống kê tồn kho - Lọc nâng cao";
+    Layout = "~/Areas/admin/Views/_LayoutCustomAdmin.cshtml";
     int stt = (Model.KetQua.PageNumber - 1) * Model.KetQua.PageSize + 1;
 }
 
-@section TonKhoFilterSidebar {
-    <form method="get" asp-area="admin" asp-controller="TonKho" asp-action="ThongKeTonKhoFilter">
-        <!-- Mã sản phẩm -->
-        <div class="border-bottom mb-4 pb-4">
-            <h5 class="font-weight-semi-bold mb-3">Mã sản phẩm</h5>
-            <input type="text" name="maSp" value="@Model.MaSp" class="form-control mb-2 w-100" placeholder="Nhập mã sản phẩm..." />
-        </div>
+<!-- Page Header -->
+<div class="page-header">
+    <h1 class="page-title">
+        <i class="fas fa-filter me-2"></i>Thống kê tồn kho - Lọc nâng cao
+    </h1>
+    <p class="page-subtitle">Tìm kiếm và lọc sản phẩm theo các tiêu chí cụ thể</p>
+</div>
 
-        <!-- Tên sản phẩm -->
-        <div class="border-bottom mb-4 pb-4">
-            <h5 class="font-weight-semi-bold mb-3">Tên sản phẩm</h5>
-            <input type="text" name="tenSp" value="@Model.TenSp" class="form-control mb-2 w-100" placeholder="Nhập tên sản phẩm..." />
-        </div>
+<div class="row">
+    <!-- Filter Sidebar -->
+    <div class="col-md-3">
+        <div class="admin-card">
+            <div class="admin-card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-search me-2"></i>Bộ lọc tìm kiếm
+                </h5>
+            </div>
+            <div class="admin-card-body">
+                <form method="get" asp-area="admin" asp-controller="TonKho" asp-action="ThongKeTonKhoFilter">
+                    <!-- Product Code Filter -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">
+                            <i class="fas fa-barcode me-2"></i>Mã sản phẩm
+                        </label>
+                        <input type="text" name="maSp" value="@Model.MaSp" class="form-control" placeholder="Nhập mã sản phẩm..." />
+                    </div>
 
-        <!-- Khoảng tồn kho -->
-        <div class="border-bottom mb-4 pb-4">
-            <h5 class="font-weight-semi-bold mb-3">Tồn kho</h5>
-            <input type="number" name="tonTu" value="@Model.TonKhoTu" class="form-control mb-2 w-100" placeholder="Từ..." />
-            <input type="number" name="tonDen" value="@Model.TonKhoDen" class="form-control mb-2 w-100" placeholder="Đến..." />
-        </div>
+                    <!-- Product Name Filter -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">
+                            <i class="fas fa-box me-2"></i>Tên sản phẩm
+                        </label>
+                        <input type="text" name="tenSp" value="@Model.TenSp" class="form-control" placeholder="Nhập tên sản phẩm..." />
+                    </div>
 
-        <div class="text-start mt-3">
-            <button type="submit" class="btn btn-primary">Lọc tồn kho</button>
-        </div>
-    </form>
-}
+                    <!-- Inventory Range Filter -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">
+                            <i class="fas fa-warehouse me-2"></i>Khoảng tồn kho
+                        </label>
+                        <div class="row">
+                            <div class="col-6">
+                                <input type="number" name="tonTu" value="@Model.TonKhoTu" class="form-control" placeholder="Từ..." min="0" />
+                            </div>
+                            <div class="col-6">
+                                <input type="number" name="tonDen" value="@Model.TonKhoDen" class="form-control" placeholder="Đến..." min="0" />
+                            </div>
+                        </div>
+                    </div>
 
-<table class="table table-bordered text-center">
-    <thead class="table-success">
-        <tr>
-            <th>STT</th>
-            <th>Mã SP</th>
-            <th>Tên SP</th>
-            <th>Số lượng nhập</th>
-            <th>Số lượng bán</th>
-            <th class="text-danger">Tồn kho</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.KetQua)
+                    <!-- Quick Filter Buttons -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">
+                            <i class="fas fa-lightning-bolt me-2"></i>Lọc nhanh
+                        </label>
+                        <div class="d-grid gap-2">
+                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="setFilter(0, 0)">
+                                <i class="fas fa-times-circle me-1"></i>Hết hàng
+                            </button>
+                            <button type="button" class="btn btn-outline-warning btn-sm" onclick="setFilter(1, 10)">
+                                <i class="fas fa-exclamation-triangle me-1"></i>Sắp hết (1-10)
+                            </button>
+                            <button type="button" class="btn btn-outline-success btn-sm" onclick="setFilter(11, 999999)">
+                                <i class="fas fa-check-circle me-1"></i>Còn nhiều (>10)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search me-2"></i>Tìm kiếm
+                        </button>
+                        <a asp-action="ThongKeTonKho" class="btn btn-outline-secondary">
+                            <i class="fas fa-times me-2"></i>Xóa bộ lọc
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results -->
+    <div class="col-md-9">
+        <!-- Results Summary -->
+        @if (Model.KetQua.Any())
         {
-            <tr>
-                <td>@stt</td>
-                <td>@item.MaSp</td>
-                <td>@item.TenSp</td>
-                <td>@item.TongNhap</td>
-                <td>@item.TongBan</td>
-                <td class="fw-bold text-danger">@item.TonKho</td>
-            </tr>
-            stt++;
+            <div class="alert alert-info" role="alert">
+                <i class="fas fa-info-circle me-2"></i>
+                <strong>Kết quả:</strong> Tìm thấy <strong>@Model.KetQua.TotalItemCount</strong> sản phẩm phù hợp với điều kiện lọc.
+            </div>
         }
-    </tbody>
-</table>
 
-<div class="text-center mt-4">
-    @Html.PagedListPager(Model.KetQua, page => Url.Action("ThongKeTonKho", new
+        <!-- Results Table -->
+        <div class="admin-card">
+            <div class="admin-card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-table me-2"></i>Kết quả tìm kiếm
+                </h5>
+                @if (Model.KetQua.Any())
+                {
+                    <button class="btn btn-success btn-sm" onclick="exportToExcel()">
+                        <i class="fas fa-file-excel me-2"></i>Xuất Excel
+                    </button>
+                }
+            </div>
+            <div class="admin-card-body p-0">
+                @if (Model.KetQua.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="border-0">
+                                        <i class="fas fa-hashtag me-2"></i>STT
+                                    </th>
+                                    <th class="border-0">
+                                        <i class="fas fa-barcode me-2"></i>Mã SP
+                                    </th>
+                                    <th class="border-0">
+                                        <i class="fas fa-box me-2"></i>Tên SP
+                                    </th>
+                                    <th class="border-0 text-center">
+                                        <i class="fas fa-arrow-down me-2"></i>Số lượng nhập
+                                    </th>
+                                    <th class="border-0 text-center">
+                                        <i class="fas fa-arrow-up me-2"></i>Số lượng bán
+                                    </th>
+                                    <th class="border-0 text-center">
+                                        <i class="fas fa-warehouse me-2"></i>Tồn kho
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.KetQua)
+                                {
+                                    string statusClass = "";
+                                    string statusIcon = "";
+                                    if (item.TonKho <= 0)
+                                    {
+                                        statusClass = "table-danger";
+                                        statusIcon = "fas fa-times-circle text-danger";
+                                    }
+                                    else if (item.TonKho <= 10)
+                                    {
+                                        statusClass = "table-warning";
+                                        statusIcon = "fas fa-exclamation-triangle text-warning";
+                                    }
+                                    else
+                                    {
+                                        statusClass = "";
+                                        statusIcon = "fas fa-check-circle text-success";
+                                    }
+                                    
+                                    <tr class="@statusClass">
+                                        <td>@stt</td>
+                                        <td class="fw-semibold">@item.MaSp</td>
+                                        <td>@item.TenSp</td>
+                                        <td class="text-center">
+                                            <span class="badge bg-info">@item.TongNhap</span>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="badge bg-primary">@item.TongBan</span>
+                                        </td>
+                                        <td class="text-center">
+                                            <i class="@statusIcon me-2"></i>
+                                            <span class="fw-bold">@item.TonKho</span>
+                                        </td>
+                                    </tr>
+                                    stt++;
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-5">
+                        <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">Không tìm thấy sản phẩm nào</h5>
+                        <p class="text-muted">Thử thay đổi điều kiện tìm kiếm</p>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        @if (Model.KetQua.Any())
         {
-            page,
-            maSp = Model.MaSp,
-            tenSp = Model.TenSp,
-            tonTu = Model.TonKhoTu,
-            tonDen = Model.TonKhoDen
-        }), new PagedListRenderOptions
+            <div class="d-flex justify-content-center mt-4">
+                @Html.PagedListPager(Model.KetQua, page => Url.Action("ThongKeTonKhoFilter", new
+                    {
+                        page,
+                        maSp = Model.MaSp,
+                        tenSp = Model.TenSp,
+                        tonTu = Model.TonKhoTu,
+                        tonDen = Model.TonKhoDen
+                    }), new PagedListRenderOptions
 {
     DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
     DisplayLinkToNextPage = PagedListDisplayMode.Always,
-    UlElementClasses = new[] { "pagination justify-content-center" },
+    UlElementClasses = new[] { "pagination" },
     LiElementClasses = new[] { "page-item" },
     PageClasses = new[] { "page-link" }
 })
+            </div>
+        }
+    </div>
 </div>
+
+@section Scripts {
+    <script>
+        function setFilter(min, max) {
+            document.querySelector('input[name="tonTu"]').value = min;
+            document.querySelector('input[name="tonDen"]').value = max;
+        }
+        
+        function exportToExcel() {
+            // Excel export functionality - implement based on your preference
+            alert('Chức năng xuất Excel sẽ được triển khai!');
+        }
+        
+        // Auto-submit form when quick filter buttons are clicked
+        document.querySelectorAll('.btn[onclick^="setFilter"]').forEach(btn => {
+            btn.addEventListener('click', function() {
+                setTimeout(() => {
+                    document.querySelector('form').submit();
+                }, 100);
+            });
+        });
+    </script>
+}
 

@@ -1,0 +1,175 @@
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Areas/admin/Views/_LayoutCustomAdmin.cshtml";
+}
+
+<!-- Page Header -->
+<div class="page-header">
+    <h1 class="page-title">Dashboard</h1>
+    <p class="page-subtitle">Tổng quan về hệ thống CongShop</p>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="admin-card">
+            <div class="admin-card-body text-center">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h3 class="text-primary mb-1">125</h3>
+                        <p class="text-muted mb-0">Tổng sản phẩm</p>
+                    </div>
+                    <div class="text-primary">
+                        <i class="fas fa-box fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="admin-card">
+            <div class="admin-card-body text-center">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h3 class="text-success mb-1">89</h3>
+                        <p class="text-muted mb-0">Đơn hàng mới</p>
+                    </div>
+                    <div class="text-success">
+                        <i class="fas fa-shopping-cart fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="admin-card">
+            <div class="admin-card-body text-center">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h3 class="text-warning mb-1">15</h3>
+                        <p class="text-muted mb-0">Sản phẩm sắp hết</p>
+                    </div>
+                    <div class="text-warning">
+                        <i class="fas fa-exclamation-triangle fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6 mb-4">
+        <div class="admin-card">
+            <div class="admin-card-body text-center">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h3 class="text-danger mb-1">2.5M</h3>
+                        <p class="text-muted mb-0">Doanh thu tháng</p>
+                    </div>
+                    <div class="text-danger">
+                        <i class="fas fa-chart-line fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activities -->
+<div class="row">
+    <div class="col-lg-8 mb-4">
+        <div class="admin-card">
+            <div class="admin-card-header">
+                <h5 class="mb-0">Đơn hàng gần đây</h5>
+            </div>
+            <div class="admin-card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Mã đơn</th>
+                                <th>Khách hàng</th>
+                                <th>Tổng tiền</th>
+                                <th>Trạng thái</th>
+                                <th>Ngày đặt</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#001</td>
+                                <td>Nguyễn Văn A</td>
+                                <td>250,000 VND</td>
+                                <td><span class="badge bg-warning">Chờ xử lý</span></td>
+                                <td>25/12/2024</td>
+                            </tr>
+                            <tr>
+                                <td>#002</td>
+                                <td>Trần Thị B</td>
+                                <td>180,000 VND</td>
+                                <td><span class="badge bg-success">Hoàn thành</span></td>
+                                <td>25/12/2024</td>
+                            </tr>
+                            <tr>
+                                <td>#003</td>
+                                <td>Lê Văn C</td>
+                                <td>320,000 VND</td>
+                                <td><span class="badge bg-primary">Đang giao</span></td>
+                                <td>24/12/2024</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4 mb-4">
+        <div class="admin-card">
+            <div class="admin-card-header">
+                <h5 class="mb-0">Hoạt động gần đây</h5>
+            </div>
+            <div class="admin-card-body">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="bg-primary rounded-circle p-2 me-3">
+                        <i class="fas fa-plus text-white"></i>
+                    </div>
+                    <div>
+                        <p class="mb-1">Thêm sản phẩm mới</p>
+                        <small class="text-muted">5 phút trước</small>
+                    </div>
+                </div>
+                
+                <div class="d-flex align-items-center mb-3">
+                    <div class="bg-success rounded-circle p-2 me-3">
+                        <i class="fas fa-check text-white"></i>
+                    </div>
+                    <div>
+                        <p class="mb-1">Duyệt đơn hàng #001</p>
+                        <small class="text-muted">10 phút trước</small>
+                    </div>
+                </div>
+                
+                <div class="d-flex align-items-center mb-3">
+                    <div class="bg-warning rounded-circle p-2 me-3">
+                        <i class="fas fa-edit text-white"></i>
+                    </div>
+                    <div>
+                        <p class="mb-1">Cập nhật giá sản phẩm</p>
+                        <small class="text-muted">15 phút trước</small>
+                    </div>
+                </div>
+                
+                <div class="d-flex align-items-center">
+                    <div class="bg-info rounded-circle p-2 me-3">
+                        <i class="fas fa-truck text-white"></i>
+                    </div>
+                    <div>
+                        <p class="mb-1">Nhập kho mới</p>
+                        <small class="text-muted">1 giờ trước</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -2,36 +2,95 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "Xác nhận xóa ảnh sản phẩm";
-    Layout = "~/Areas/admin/Views/_LayoutAdmin.cshtml";
+    Layout = "~/Areas/admin/Views/_LayoutCustomAdmin.cshtml";
 }
 
-<h2 class="text-danger fw-bold mb-4">Xác nhận xóa ảnh sản phẩm</h2>
-
-<div class="alert alert-warning">
-    Bạn có chắc chắn muốn xóa ảnh sản phẩm này không?
+<!-- Page Header -->
+<div class="page-header bg-danger bg-opacity-10 border-start border-danger border-4">
+    <h1 class="page-title text-danger">
+        <i class="fas fa-exclamation-triangle me-2"></i>Xác nhận xóa ảnh
+    </h1>
+    <p class="page-subtitle">Xóa hình ảnh sản phẩm khỏi hệ thống</p>
 </div>
 
-<div class="mb-3">
-    <strong>Tên sản phẩm:</strong> @Model.TenSp
+<div class="admin-card border-danger">
+    <div class="admin-card-header bg-danger bg-opacity-10">
+        <h5 class="mb-0 text-danger">
+            <i class="fas fa-trash-alt me-2"></i>Xác nhận xóa ảnh sản phẩm
+        </h5>
+    </div>
+    <div class="admin-card-body">
+        <!-- Warning Alert -->
+        <div class="alert alert-warning d-flex align-items-center" role="alert">
+            <i class="fas fa-exclamation-triangle fa-lg me-3"></i>
+            <div>
+                <strong>Cảnh báo!</strong> Bạn có chắc chắn muốn xóa ảnh sản phẩm này không? 
+                Hành động này không thể hoàn tác.
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Product Info -->
+            <div class="col-md-6">
+                <div class="mb-4">
+                    <label class="fw-semibold text-muted mb-2">Sản phẩm:</label>
+                    <div class="fs-5 fw-bold text-primary">@Model.TenSp</div>
+                </div>
+                <div class="mb-4">
+                    <label class="fw-semibold text-muted mb-2">Mã ảnh:</label>
+                    <div><span class="badge bg-secondary fs-6">@Model.MaAnh</span></div>
+                </div>
+            </div>
+
+            <!-- Image Preview -->
+            <div class="col-md-6">
+                <label class="fw-semibold text-muted mb-2">Ảnh sẽ bị xóa:</label>
+                <div class="text-center">
+                    @if (!string.IsNullOrEmpty(Model.Url))
+                    {
+                        <div class="position-relative d-inline-block">
+                            <img src="@Model.Url" alt="Ảnh sản phẩm" 
+                                 class="img-fluid rounded shadow" style="max-height: 250px; max-width: 100%;" />
+                            <div class="position-absolute top-0 end-0 p-2">
+                                <span class="badge bg-danger">
+                                    <i class="fas fa-times"></i>
+                                </span>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-4">
+                            <i class="fas fa-image fa-3x text-muted mb-2"></i>
+                            <p class="text-muted">Không có ảnh hiển thị</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Confirmation Form -->
+        <form asp-action="XoaAnhSanPham" asp-area="admin" asp-controller="HomeAdmin" method="post" class="mt-4">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="MaAnh" />
+            <input type="hidden" asp-for="MaSp" />
+
+            <div class="alert alert-info d-flex align-items-center" role="alert">
+                <i class="fas fa-info-circle fa-lg me-3"></i>
+                <div>
+                    <strong>Lưu ý:</strong> Sau khi xóa, ảnh sẽ bị xóa vĩnh viễn khỏi hệ thống và không thể khôi phục.
+                </div>
+            </div>
+
+            <div class="text-end">
+                <a asp-action="DanhSachAnhSanPham" asp-route-id="@Model.MaSp" class="btn btn-secondary me-2">
+                    <i class="fas fa-arrow-left me-2"></i>Hủy bỏ
+                </a>
+                <button type="submit" class="btn btn-danger" 
+                        onclick="return confirm('Bạn có thực sự chắc chắn muốn xóa ảnh này?')">
+                    <i class="fas fa-trash-alt me-2"></i>Xác nhận xóa
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
-
-<div class="mb-3">
-    @if (!string.IsNullOrEmpty(Model.Url))
-    {
-        <img src="@Model.Url" alt="Ảnh sản phẩm" class="img-thumbnail" style="max-height: 250px;" />
-
-    }
-    else
-    {
-        <p class="text-muted">Không có ảnh hiển thị.</p>
-    }
-</div>
-
-<form asp-action="XoaAnhSanPham" asp-area="admin" asp-controller="HomeAdmin" method="post">
-    @Html.AntiForgeryToken()
-    <input type="hidden" asp-for="MaAnh" />
-    <input type="hidden" asp-for="MaSp" />
-
-    <button type="submit" class="btn btn-danger me-2">🗑️ Xác nhận xóa</button>
-    <a asp-action="DanhMucAnhSanPham" asp-route-id="@Model.MaSp" class="btn btn-secondary">Quay lại</a>
-</form>

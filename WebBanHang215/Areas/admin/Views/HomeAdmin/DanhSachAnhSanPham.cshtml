@@ -3,38 +3,79 @@
 
 @{
     ViewData["Title"] = "Danh sách ảnh sản phẩm";
-    Layout = "~/Areas/admin/Views/_LayoutAdmin.cshtml";
+    Layout = "~/Areas/admin/Views/_LayoutCustomAdmin.cshtml";
 }
 
-<div class="text-center my-4">
-    <h2 class="text-danger">Ảnh của sản phẩm: @Model.TenSp</h2>
+<!-- Page Header -->
+<div class="page-header">
+    <h1 class="page-title">Quản lý ảnh sản phẩm</h1>
+    <p class="page-subtitle">Ảnh của sản phẩm: <strong class="text-primary">@Model.TenSp</strong></p>
 </div>
 
-<div class="d-flex flex-wrap gap-3 justify-content-start mb-4">
-    @if (Model.UrlAnh != null && Model.UrlAnh.Any())
-    {
-        foreach (var anh in Model.UrlAnh)
+<div class="admin-card">
+    <div class="admin-card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">
+            <i class="fas fa-images me-2"></i>Danh sách hình ảnh
+        </h5>
+        <a asp-action="ThemAnhSanPham" asp-area="admin" asp-controller="HomeAdmin" 
+           asp-route-id="@Model.MaSp" class="btn btn-primary btn-sm">
+            <i class="fas fa-plus me-2"></i>Thêm ảnh mới
+        </a>
+    </div>
+    <div class="admin-card-body">
+        @if (Model.UrlAnh != null && Model.UrlAnh.Any())
         {
-            <div class="border p-2" style="width: 200px;">
-                <img src="@Url.Content("~" + anh.Url)" alt="Ảnh sản phẩm" class="img-thumbnail" style="height: 250px; width: 100%; object-fit: cover;" />
-
-
-
-                <form asp-action="XoaAnhSanPham" asp-area="admin" asp-controller="HomeAdmin" method="get" class="mt-2">
-                    <input type="hidden" name="id" value="@anh.MaAnh" />
-                    <button type="submit" class="btn btn-danger btn-sm w-100">Xóa ảnh</button>
-                </form>
+            <div class="row g-3">
+                @foreach (var anh in Model.UrlAnh)
+                {
+                    <div class="col-md-3">
+                        <div class="card h-100 shadow-sm">
+                            <div class="position-relative">
+                                <img src="@Url.Content("~" + anh.Url)" alt="Ảnh sản phẩm" 
+                                     class="card-img-top" style="height: 200px; object-fit: cover;" />
+                                <div class="position-absolute top-0 end-0 p-2">
+                                    <span class="badge bg-dark bg-opacity-75">ID: @anh.MaAnh</span>
+                                </div>
+                            </div>
+                            <div class="card-body d-flex flex-column">
+                                <div class="mt-auto">
+                                    <form asp-action="XoaAnhSanPham" asp-area="admin" asp-controller="HomeAdmin" 
+                                          method="get" class="d-inline">
+                                        <input type="hidden" name="id" value="@anh.MaAnh" />
+                                        <button type="submit" class="btn btn-danger btn-sm w-100" 
+                                                onclick="return confirm('Bạn có chắc chắn muốn xóa ảnh này?')">
+                                            <i class="fas fa-trash me-2"></i>Xóa ảnh
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
             </div>
         }
-    }
-    else
-    {
-        <p class="text-muted">Không có ảnh nào cho sản phẩm này.</p>
-    }
+        else
+        {
+            <div class="text-center py-5">
+                <i class="fas fa-image fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">Chưa có ảnh nào</h5>
+                <p class="text-muted">Sản phẩm này chưa có hình ảnh nào được tải lên</p>
+                <a asp-action="ThemAnhSanPham" asp-area="admin" asp-controller="HomeAdmin" 
+                   asp-route-id="@Model.MaSp" class="btn btn-primary">
+                    <i class="fas fa-plus me-2"></i>Thêm ảnh đầu tiên
+                </a>
+            </div>
+        }
+    </div>
 </div>
 
-<div class="text-center mt-4">
+<!-- Action Buttons -->
+<div class="text-end mt-4">
     <a asp-action="DanhMucSanPham" asp-area="admin" asp-controller="HomeAdmin" class="btn btn-secondary">
-        Quay lại danh mục sản phẩm
+        <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách sản phẩm
+    </a>
+    <a asp-action="ChiTietSanPham" asp-area="admin" asp-controller="HomeAdmin" 
+       asp-route-id="@Model.MaSp" class="btn btn-info ms-2">
+        <i class="fas fa-eye me-2"></i>Xem chi tiết sản phẩm
     </a>
 </div>

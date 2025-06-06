@@ -3,38 +3,81 @@
 
 @{
     ViewData["Title"] = "Xóa sản phẩm";
-    Layout = "~/Areas/admin/Views/_LayoutAdmin.cshtml";
+    Layout = "~/Areas/admin/Views/_LayoutCustomAdmin.cshtml";
 }
 
-<h2 class="text-danger">Xác nhận xóa sản phẩm</h2>
-<hr />
-<div class="alert alert-warning">
-    <p>Bạn có chắc chắn muốn xóa sản phẩm sau không?</p>
+<!-- Page Header -->
+<div class="page-header">
+    <h1 class="page-title">Xóa sản phẩm</h1>
+    <p class="page-subtitle">Xác nhận xóa sản phẩm khỏi hệ thống</p>
 </div>
 
-<div class="mb-3">
-    <strong>Tên sản phẩm:</strong> @Model.TenSp
-</div>
-<div class="mb-3">
-    <strong>Mô tả:</strong> @Model.MoTa
-</div>
-<div class="mb-3">
-    <strong>Giá bán:</strong> @Model.Gia?.ToString("N0") VNĐ
-</div>
-<div class="mb-3">
-    <strong>Giá nhập:</strong> @Model.GiaNhap?.ToString("N0") VNĐ
-</div>
-<div class="mb-3">
-    <strong>Giá khuyến mãi:</strong> @Model.GiaKhuyenMai?.ToString("N0") VNĐ
-</div>
-<div class="mb-3">
-    <strong>Số lượng nhập:</strong> @Model.SoLuongNhap
-</div>
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="admin-card">
+            <div class="admin-card-header">
+                <h5 class="mb-0 text-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Xác nhận xóa sản phẩm
+                </h5>
+            </div>
+            <div class="admin-card-body">
+                <div class="alert alert-warning">
+                    <i class="fas fa-warning me-2"></i>
+                    Bạn có chắc chắn muốn xóa sản phẩm sau không? Hành động này không thể hoàn tác.
+                </div>
 
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <strong>Mã sản phẩm:</strong> #@Model.MaSp
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <strong>Tên sản phẩm:</strong> @Model.TenSp
+                    </div>
+                </div>
 
-<form asp-action="XoaSanPham" asp-area="admin" asp-controller="HomeAdmin" method="post">
-    <input type="hidden" asp-for="MaSp" />
-    <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
-    <a asp-action="DanhMucSanPham" asp-area="admin" asp-controller="HomeAdmin" class="btn btn-secondary">Hủy</a>
-</form>
+                <div class="mb-3">
+                    <strong>Mô tả:</strong> 
+                    <p class="text-muted">@Model.MoTa</p>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <strong>Giá bán:</strong> 
+                        <span class="text-success">@Model.Gia?.ToString("N0") VNĐ</span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <strong>Giá nhập:</strong> 
+                        <span class="text-info">@Model.GiaNhap?.ToString("N0") VNĐ</span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <strong>Số lượng:</strong> 
+                        <span class="text-warning">@Model.SoLuongNhap</span>
+                    </div>
+                </div>
+
+                @if (Model.GiaKhuyenMai.HasValue && Model.GiaKhuyenMai > 0)
+                {
+                    <div class="mb-3">
+                        <strong>Giá khuyến mãi:</strong> 
+                        <span class="text-danger">@Model.GiaKhuyenMai?.ToString("N0") VNĐ</span>
+                    </div>
+                }
+
+                <hr>
+
+                <form asp-action="XoaSanPham" asp-area="admin" asp-controller="HomeAdmin" method="post">
+                    <input type="hidden" asp-for="MaSp" />
+                    <div class="d-flex justify-content-end">
+                        <a asp-action="DanhMucSanPham" asp-area="admin" asp-controller="HomeAdmin" class="btn btn-secondary me-3">
+                            <i class="fas fa-arrow-left me-2"></i>Hủy
+                        </a>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash me-2"></i>Xác nhận xóa
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 

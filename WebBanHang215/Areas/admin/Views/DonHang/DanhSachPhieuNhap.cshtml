@@ -4,88 +4,118 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
-    ViewData["Title"] = "DanhSachPhieuNhap";
-    Layout = "~/Areas/admin/Views/_LayoutAdmin.cshtml";
+    ViewData["Title"] = "Danh sách phiếu nhập";
+    Layout = "~/Areas/admin/Views/_LayoutCustomAdmin.cshtml";
     int stt = (Model.PageNumber - 1) * Model.PageSize + 1;
 }
 
-<div class="text-center my-4">
-    <h1 class="btn btn-primary shadow px-4 py-2 rounded text-white fs-2">
-        Danh sách phiếu nhập
-    </h1>
+<!-- Page Header -->
+<div class="page-header">
+    <h1 class="page-title">Danh sách phiếu nhập</h1>
+    <p class="page-subtitle">Quản lý tất cả phiếu nhập kho trong hệ thống</p>
 </div>
 
-<p>
-    <a asp-action="ThemPhieuNhap" class="btn btn-success">Thêm phiếu nhập mới</a>
-</p>
+<!-- Actions -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="admin-card">
+            <div class="admin-card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Danh sách phiếu nhập (@Model.TotalItemCount phiếu)</h5>
+                    <a asp-action="ThemPhieuNhap" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Thêm phiếu nhập mới
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-<table class="table text-center">
-    <thead class="table-success">
-        <tr>
-            <th>STT</th>
-            <th>@Html.DisplayNameFor(model => model[0].MaPhieuNhap)</th>
-            <th>@Html.DisplayNameFor(model => model[0].NgayNhap)</th>
-            <th>@Html.DisplayNameFor(model => model[0].GhiChu)</th>
-            <th>Chức năng</th>
-        </tr>
-    </thead>
-    <tbody>
-        @{
-            int mau = 0;
-            string mauSD = "table-success";
-        }
-        @foreach (var item in Model)
-        {
-            switch (mau % 4)
-            {
-                case 0: mauSD = "table-primary"; break;
-                case 1: mauSD = "table-warning"; break;
-                case 2: mauSD = "table-success"; break;
-                case 3: mauSD = "table-danger"; break;
+<!-- Phieu Nhap Table -->
+<div class="row">
+    <div class="col-12">
+        <div class="admin-card">
+            <div class="admin-card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>STT</th>
+                                <th>@Html.DisplayNameFor(model => model[0].MaPhieuNhap)</th>
+                                <th>@Html.DisplayNameFor(model => model[0].NgayNhap)</th>
+                                <th>@Html.DisplayNameFor(model => model[0].GhiChu)</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td><strong>@stt</strong></td>
+                                    <td>@Html.DisplayFor(modelItem => item.MaPhieuNhap)</td>
+                                    <td>@item.NgayNhap.ToString("dd/MM/yyyy")</td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(item.GhiChu) && item.GhiChu.Length > 50)
+                                        {
+                                            <span>@(item.GhiChu.Substring(0, 50))...</span>
+                                        }
+                                        else
+                                        {
+                                            @Html.DisplayFor(modelItem => item.GhiChu)
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a asp-action="DanhSachChiTietPhieuNhap" asp-route-maPhieuNhap="@item.MaPhieuNhap" class="btn btn-sm btn-info" title="Chi tiết">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a asp-action="SuaPhieuNhap" asp-route-id="@item.MaPhieuNhap" class="btn btn-sm btn-warning" title="Sửa">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <button type="button" class="btn btn-sm btn-danger" title="Xóa" onclick="confirmDelete('@item.MaPhieuNhap')">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                        <div class="btn-group mt-1" role="group">
+                                            <a asp-action="ThemChiTietPhieuNhap" asp-route-maPhieuNhap="@item.MaPhieuNhap" class="btn btn-sm btn-success" title="Thêm chi tiết">
+                                                <i class="fas fa-plus"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                stt++;
+                            }                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination -->
+                <div class="d-flex justify-content-center mt-4">
+                    @Html.PagedListPager(Model, page => Url.Action("DanhSachPhieuNhap", new { page }),
+                        new PagedListRenderOptions
+                        {
+                            DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                            DisplayLinkToNextPage = PagedListDisplayMode.Always,
+                            UlElementClasses = new[] { "pagination" },
+                            LiElementClasses = new[] { "page-item" },
+                            PageClasses = new[] { "page-link" }
+                        })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden form for delete -->
+<form id="deleteForm" asp-action="XoaPhieuNhap" asp-controller="DonHang" asp-area="admin" method="post" style="display:none;">
+    <input type="hidden" name="id" id="deleteId" />
+</form>
+
+@section Scripts {
+    <script>
+        function confirmDelete(maPhieuNhap) {
+            if (confirm('Bạn có chắc chắn muốn xóa phiếu nhập này không?')) {
+                document.getElementById('deleteId').value = maPhieuNhap;
+                document.getElementById('deleteForm').submit();
             }
-            mau++;
-            <tr class="@mauSD">
-                <td>@stt</td>
-                <td>@item.MaPhieuNhap</td>
-                <td>@item.NgayNhap.ToString("dd/MM/yyyy")</td>
-                <td>@item.GhiChu</td>
-                <td>
-                    <a asp-action="DanhSachChiTietPhieuNhap"
-                       asp-route-maPhieuNhap="@item.MaPhieuNhap"
-                       class="btn btn-sm btn-outline-primary">Chi tiết</a>
-
-                    <a asp-action="SuaPhieuNhap"
-                       asp-route-id="@item.MaPhieuNhap"
-                       class="btn btn-sm btn-outline-warning">Sửa</a>
-
-                    <form asp-action="XoaPhieuNhap"
-                          asp-controller="DonHang"
-                          asp-area="admin"
-                          method="post"
-                          onsubmit="return confirm('Bạn có chắc chắn muốn xóa phiếu nhập này không?');"
-                          style="display:inline">
-                        <input type="hidden" name="id" value="@item.MaPhieuNhap" />
-                        <button type="submit" class="btn btn-sm btn-link text-danger p-0">Xóa</button>
-                    </form>
-
-                    <a asp-action="ThemChiTietPhieuNhap"
-                       asp-route-maPhieuNhap="@item.MaPhieuNhap"
-                       class="btn btn-sm btn-outline-success">➕ Thêm chi tiết</a>
-                </td>
-            </tr>
-            stt++;
         }
-    </tbody>
-</table>
-
-<div class="product__pagination text-center mt-4">
-    @Html.PagedListPager(Model, page => Url.Action("DanhSachPhieuNhap", new { page }),
-            new PagedListRenderOptions
-    {
-        DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
-        DisplayLinkToNextPage = PagedListDisplayMode.Always,
-        UlElementClasses = new[] { "pagination" },
-        LiElementClasses = new[] { "page-item" },
-        PageClasses = new[] { "page-link" }
-    })
-</div>
+    </script>
+}

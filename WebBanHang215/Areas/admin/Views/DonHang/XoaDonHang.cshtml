@@ -1,90 +1,89 @@
-﻿@*@model WebBanHang215.Areas.admin.ViewModels.DonHangDeleteViewModel
+﻿@model WebBanHang215.Areas.admin.ViewModels.DonHangDeleteViewModel
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
     ViewData["Title"] = "Xóa đơn hàng";
-    Layout = "~/Areas/admin/Views/_LayoutAdmin.cshtml";
+    Layout = "~/Areas/admin/Views/_LayoutCustomAdmin.cshtml";
 }
 
-<h2 class="text-danger">Xác nhận xóa đơn hàng</h2>
+<!-- Page Header -->
+<div class="page-header">
+    <h1 class="page-title text-danger">
+        <i class="fas fa-trash-alt me-2"></i>Xóa đơn hàng #@Model.MaDh
+    </h1>
+    <p class="page-subtitle">Xác nhận xóa đơn hàng khỏi hệ thống</p>
+</div>
 
+<!-- Warning Alert -->
 <div class="alert alert-warning">
-    Bạn có chắc chắn muốn xóa đơn hàng sau không?
-</div>
-
-<table class="table table-bordered">
-    <tr>
-        <th>Mã đơn</th>
-        <td>@Model.MaDh</td>
-    </tr>
-    <tr>
-        <th>Người đặt hàng</th>
-        <td>@Model.TenDangNhap</td>
-    </tr>
-    <tr>
-        <th>Tổng tiền</th>
-        <td>@Model.TongTien?.ToString("N0")</td>
-    </tr>
-    <tr>
-        <th>Ngày đặt</th>
-        <td>@Model.NgayDatHang?.ToString("dd/MM/yyyy")</td>
-    </tr>
-    <tr>
-        <th>Trạng thái</th>
-        <td>@Model.TrangThai</td>
-    </tr>
-</table>
-
-<form asp-action="XoaDonHangConfirmed" method="post">
-    <input type="hidden" asp-for="MaDh" />
-    <button type="submit" class="btn btn-danger">Xóa</button>
-    <a asp-action="Index" class="btn btn-secondary ms-2">Hủy</a>
-</form>*@
-
-@model WebBanHang215.Areas.admin.ViewModels.DonHangDeleteViewModel
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-
-@{
-    ViewData["Title"] = "Xóa đơn hàng";
-    Layout = "~/Areas/admin/Views/_LayoutAdmin.cshtml";
-}
-
-<h2 class="text-danger text-center">Xác nhận xóa đơn hàng</h2>
-
-<div class="alert alert-warning text-center">
-    <strong>Bạn có chắc chắn muốn xóa đơn hàng sau không?</strong>
-</div>
-
-<table class="table table-bordered">
-    <tr>
-        <th>@Html.DisplayNameFor(m => m.MaDh)</th>
-        <td>@Model.MaDh</td>
-    </tr>
-    <tr>
-        <th>@Html.DisplayNameFor(m => m.TenDangNhap)</th>
-        <td>@Model.TenDangNhap</td>
-    </tr>
-    <tr>
-        <th>@Html.DisplayNameFor(m => m.TongTien)</th>
-        <td>@(Model.TongTien.HasValue ? Model.TongTien.Value.ToString("N0") + " đ" : "")</td>
-    </tr>
-    <tr>
-        <th>@Html.DisplayNameFor(m => m.NgayDatHang)</th>
-        <td>@(Model.NgayDatHang?.ToString("dd/MM/yyyy HH:mm"))</td>
-    </tr>
-    <tr>
-        <th>@Html.DisplayNameFor(m => m.TrangThai)</th>
-        <td>@Model.TrangThai</td>
-    </tr>
-</table>
-
-<form asp-action="XoaDonHangConfirmed" method="post">
-    <input type="hidden" asp-for="MaDh" />
-    <div class="text-center">
-        <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
-        <a asp-action="Index" class="btn btn-secondary ms-2">Hủy</a>
+    <div class="d-flex align-items-center">
+        <i class="fas fa-exclamation-triangle fa-2x me-3"></i>
+        <div>
+            <h5 class="alert-heading mb-1">Cảnh báo!</h5>
+            <p class="mb-0">Bạn có chắc chắn muốn xóa đơn hàng này? Thao tác này không thể hoàn tác.</p>
+        </div>
     </div>
-</form>
+</div>
+
+<!-- Order Details Card -->
+<div class="admin-card">
+    <div class="admin-card-header">
+        <h5 class="mb-0">
+            <i class="fas fa-info-circle me-2"></i>Thông tin đơn hàng
+        </h5>
+    </div>
+    <div class="admin-card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <table class="table table-borderless">
+                    <tr>
+                        <th class="fw-semibold text-muted" style="width: 40%;">@Html.DisplayNameFor(m => m.MaDh):</th>
+                        <td><strong>@Model.MaDh</strong></td>
+                    </tr>
+                    <tr>
+                        <th class="fw-semibold text-muted">@Html.DisplayNameFor(m => m.TenDangNhap):</th>
+                        <td>@Model.TenDangNhap</td>
+                    </tr>
+                    <tr>
+                        <th class="fw-semibold text-muted">@Html.DisplayNameFor(m => m.TrangThai):</th>
+                        <td>
+                            <span class="badge bg-info">@Model.TrangThai</span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <table class="table table-borderless">
+                    <tr>
+                        <th class="fw-semibold text-muted" style="width: 40%;">@Html.DisplayNameFor(m => m.TongTien):</th>
+                        <td><strong class="text-success">@(Model.TongTien.HasValue ? Model.TongTien.Value.ToString("N0") + " VNĐ" : "N/A")</strong></td>
+                    </tr>
+                    <tr>
+                        <th class="fw-semibold text-muted">@Html.DisplayNameFor(m => m.NgayDatHang):</th>
+                        <td>@(Model.NgayDatHang?.ToString("dd/MM/yyyy HH:mm"))</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Action Buttons -->
+<div class="admin-card">
+    <div class="admin-card-body">
+        <form asp-action="XoaDonHangConfirmed" method="post">
+            <input type="hidden" asp-for="MaDh" />
+            <div class="text-center">
+                <a asp-action="Index" class="btn btn-secondary me-3">
+                    <i class="fas fa-arrow-left me-2"></i>Hủy bỏ
+                </a>
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa đơn hàng này?')">
+                    <i class="fas fa-trash-alt me-2"></i>Xác nhận xóa
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 
 @*
     chú ý đã cho phép xóa đơn hàng thì xóa luôn các chi tiết đơn hàng liên quan

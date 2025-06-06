@@ -3,49 +3,89 @@
 
 @{
     ViewData["Title"] = "Sửa chi tiết phiếu nhập";
-    Layout = "~/Areas/admin/Views/_LayoutAdmin.cshtml";
+    Layout = "~/Areas/admin/Views/_LayoutCustomAdmin.cshtml";
 }
 
-<div class="text-center my-4">
-    <h1 class="text-dark">Sửa chi tiết phiếu nhập</h1>
+<!-- Page Header -->
+<div class="page-header">
+    <h1 class="page-title">Sửa chi tiết phiếu nhập</h1>
+    <p class="page-subtitle">Cập nhật thông tin sản phẩm trong phiếu nhập @Model.MaPhieuNhap</p>
 </div>
 
-<form asp-action="SuaChiTietPhieuNhap" method="post">
-    <input type="hidden" asp-for="MaChiTietNk" />
-
-    <div class="form-group mb-3">
-        <label asp-for="MaPhieuNhap" class="form-label"></label>
-        <input asp-for="MaPhieuNhap" class="form-control" readonly />
+<div class="admin-card">
+    <div class="admin-card-header">
+        <h5 class="mb-0">
+            <i class="fas fa-edit me-2"></i>Thông tin chi tiết phiếu nhập
+        </h5>
     </div>
+    <div class="admin-card-body">
+        <form asp-action="SuaChiTietPhieuNhap" method="post">
+            <input type="hidden" asp-for="MaChiTietNk" />
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
-    <div class="form-group mb-3">
-        <label asp-for="NgayNhap" class="form-label"></label>
-        <input asp-for="NgayNhap" class="form-control" readonly />
-    </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label asp-for="MaPhieuNhap" class="form-label fw-semibold">Mã phiếu nhập</label>
+                        <input asp-for="MaPhieuNhap" class="form-control" readonly />
+                        <small class="text-muted">Mã phiếu nhập không thể thay đổi</small>
+                    </div>
 
-    <div class="form-group mb-3">
-        <label asp-for="MaSp" class="form-label">Sản phẩm</label>
-        <select asp-for="MaSp" asp-items="Model.SanPhamList" class="form-select"></select>
-        <span asp-validation-for="MaSp" class="text-danger"></span>
-    </div>
+                    <div class="mb-3">
+                        <label asp-for="NgayNhap" class="form-label fw-semibold">Ngày nhập</label>
+                        <input asp-for="NgayNhap" class="form-control" readonly />
+                        <small class="text-muted">Ngày nhập được thiết lập từ phiếu nhập</small>
+                    </div>
 
-    <div class="form-group mb-3">
-        <label asp-for="SoLuong" class="form-label"></label>
-        <input asp-for="SoLuong" class="form-control" />
-        <span asp-validation-for="SoLuong" class="text-danger"></span>
-    </div>
+                    <div class="mb-3">
+                        <label asp-for="MaSp" class="form-label fw-semibold">Sản phẩm *</label>
+                        <select asp-for="MaSp" asp-items="Model.SanPhamList" class="form-select">
+                            <option value="">-- Chọn sản phẩm --</option>
+                        </select>
+                        <span asp-validation-for="MaSp" class="text-danger"></span>
+                    </div>
+                </div>
 
-    <div class="form-group mb-3">
-        <label asp-for="DonGiaNhap" class="form-label"></label>
-        <input asp-for="DonGiaNhap" class="form-control" />
-        <span asp-validation-for="DonGiaNhap" class="text-danger"></span>
-    </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label asp-for="SoLuong" class="form-label fw-semibold">Số lượng *</label>
+                        <input asp-for="SoLuong" class="form-control" placeholder="Nhập số lượng" />
+                        <span asp-validation-for="SoLuong" class="text-danger"></span>
+                    </div>
 
-    <div class="d-flex justify-content-between mt-4">
-        <a asp-action="DanhSachChiTietPhieuNhap" asp-route-maPhieuNhap="@Model.MaPhieuNhap" class="btn btn-secondary">← Quay lại</a>
-        <button type="submit" class="btn btn-success">💾 Lưu thay đổi</button>
+                    <div class="mb-3">
+                        <label asp-for="DonGiaNhap" class="form-label fw-semibold">Đơn giá nhập *</label>
+                        <div class="input-group">
+                            <input asp-for="DonGiaNhap" class="form-control" placeholder="0" />
+                            <span class="input-group-text">VNĐ</span>
+                        </div>
+                        <span asp-validation-for="DonGiaNhap" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Thành tiền (ước tính)</label>
+                        <div class="input-group">
+                            <input class="form-control" value="Tính tự động khi nhập" readonly />
+                            <span class="input-group-text">VNĐ</span>
+                        </div>
+                        <small class="text-muted">Thành tiền = Số lượng × Đơn giá nhập</small>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="my-4">
+
+            <div class="text-end">
+                <a asp-action="DanhSachChiTietPhieuNhap" asp-route-maPhieuNhap="@Model.MaPhieuNhap" class="btn btn-secondary me-2">
+                    <i class="fas fa-arrow-left me-2"></i>Quay lại
+                </a>
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-save me-2"></i>Lưu thay đổi
+                </button>
+            </div>
+        </form>
     </div>
-</form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
