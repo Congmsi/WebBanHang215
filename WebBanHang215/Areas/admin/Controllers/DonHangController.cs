@@ -941,7 +941,7 @@ namespace WebBanHang215.Areas.admin.Controllers
         public IActionResult SuaPhieuNhap(string id)
         {
             var phieuNhap = _context.NhapKhos
-                .Include(p => p.MaNccNavigation)
+                .Include(p => p.NhaCungCap)
                 .Include(p => p.ChiTietNhapKhos)
                     .ThenInclude(ct => ct.SanPham)
                 .FirstOrDefault(p => p.MaPhieuNhap == id);
@@ -949,15 +949,13 @@ namespace WebBanHang215.Areas.admin.Controllers
             if (phieuNhap == null)
             {
                 return NotFound();
-            }
-
-            var viewModel = new PhieuNhapEditViewModel
+            }            var viewModel = new PhieuNhapEditViewModel
             {
                 MaPhieuNhap = phieuNhap.MaPhieuNhap,
                 NgayNhap = phieuNhap.NgayNhap,
                 MaNcc = phieuNhap.MaNcc,
                 GhiChu = phieuNhap.GhiChu,
-                TenNhaCungCap = phieuNhap.MaNccNavigation?.TenNhaCungCap,
+                TenNhaCungCap = phieuNhap.NhaCungCap?.TenNhaCungCap,
                 TongSoMat = phieuNhap.ChiTietNhapKhos?.Count ?? 0,
                 TongTien = phieuNhap.ChiTietNhapKhos?.Sum(ct => ct.SoLuong * ct.DonGiaNhap) ?? 0,
                 NhaCungCapList = _context.NhaCungCaps
