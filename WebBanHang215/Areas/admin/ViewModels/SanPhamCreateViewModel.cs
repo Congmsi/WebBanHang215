@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace WebBanHang215.ViewModels
 {
@@ -35,5 +36,8 @@ namespace WebBanHang215.ViewModels
 
         [Required(ErrorMessage = "Vui lòng chọn giới tính")]
         public int MaGioiTinh { get; set; }
+
+        // Image upload properties
+        public List<IFormFile> AnhSanPham { get; set; } = new();
     }
 }
