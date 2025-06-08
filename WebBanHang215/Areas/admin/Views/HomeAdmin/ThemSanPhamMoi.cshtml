@@ -16,9 +16,8 @@
         <div class="admin-card">
             <div class="admin-card-header">
                 <h5 class="mb-0">Thông tin sản phẩm</h5>
-            </div>
-            <div class="admin-card-body">
-                <form asp-action="ThemSanPhamMoi" method="post">
+            </div>            <div class="admin-card-body">
+                <form asp-action="ThemSanPhamMoi" method="post" enctype="multipart/form-data">
                     <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
                     <div class="row">
@@ -102,6 +101,30 @@
                                 <option value="">Chọn giới tính</option>
                             </select>
                             <span asp-validation-for="MaGioiTinh" class="text-danger"></span>
+                        </div>                    </div>
+
+                    <!-- Image Upload Section -->
+                    <div class="mb-4">
+                        <h6 class="fw-semibold mb-3">Hình ảnh sản phẩm</h6>
+                        <div class="row">
+                            <div class="col-12">
+                                <label for="AnhSanPham" class="form-label">Chọn hình ảnh</label>
+                                <input type="file" id="AnhSanPham" name="AnhSanPham" class="form-control" 
+                                       multiple accept="image/*" onchange="previewImages(this)">
+                                <div class="form-text">
+                                    <small class="text-muted">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Có thể chọn nhiều ảnh cùng lúc. Định dạng: JPG, PNG, GIF. Kích thước tối đa: 5MB/ảnh.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Image Preview Container -->
+                        <div id="imagePreview" class="row mt-3" style="display: none;">
+                            <div class="col-12">
+                                <h6 class="fw-semibold">Xem trước:</h6>
+                                <div id="previewContainer" class="d-flex flex-wrap gap-3"></div>
+                            </div>
                         </div>
                     </div>
 
@@ -123,4 +146,43 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    
+    <script>
+        function previewImages(input) {
+            const previewContainer = document.getElementById('previewContainer');
+            const imagePreviewSection = document.getElementById('imagePreview');
+            
+            // Clear previous previews
+            previewContainer.innerHTML = '';
+            
+            if (input.files && input.files.length > 0) {
+                imagePreviewSection.style.display = 'block';
+                
+                Array.from(input.files).forEach((file, index) => {
+                    if (file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        
+                        reader.onload = function(e) {
+                            const previewDiv = document.createElement('div');
+                            previewDiv.className = 'position-relative';
+                            previewDiv.innerHTML = `
+                                <img src="${e.target.result}" 
+                                     class="img-thumbnail" 
+                                     style="width: 120px; height: 120px; object-fit: cover;"
+                                     alt="Preview ${index + 1}">
+                                <div class="position-absolute top-0 end-0 p-1">
+                                    <span class="badge bg-primary">${index + 1}</span>
+                                </div>
+                            `;
+                            previewContainer.appendChild(previewDiv);
+                        };
+                        
+                        reader.readAsDataURL(file);
+                    }
+                });
+            } else {
+                imagePreviewSection.style.display = 'none';
+            }
+        }
+    </script>
 }

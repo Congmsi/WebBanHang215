@@ -37,10 +37,10 @@
         <div class="admin-card">
             <div class="admin-card-body">
                 <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead class="table-light">
+                    <table class="table table-hover">                        <thead class="table-light">
                             <tr>
                                 <th>STT</th>
+                                <th>Hình ảnh</th>
                                 <th>@Html.DisplayNameFor(model => model[0].TenSp)</th>
                                 <th>@Html.DisplayNameFor(model => model[0].MoTa)</th>
                                 <th>@Html.DisplayNameFor(model => model[0].Gia)</th>
@@ -50,11 +50,27 @@
                                 <th>Thao tác</th>
                             </tr>
                         </thead>
-                        <tbody>                            @foreach (var item in Model)
-                            {
+                        <tbody>                            @foreach (var item in Model)                            {
                                 <tr>
                                     <td><strong>@stt</strong></td>
-                                    <td>@Html.DisplayFor(modelItem => item.TenSp)</td>                                    <td>
+                                    <td>
+                                        @if (item.AnhSanPhams != null && item.AnhSanPhams.Any())
+                                        {
+                                            <img src="@item.AnhSanPhams.FirstOrDefault()?.Url" 
+                                                 alt="@item.TenSp" 
+                                                 class="product-thumbnail"
+                                                 style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd;"
+                                                 onerror="this.src='/images/no-image.png';">
+                                        }
+                                        else
+                                        {
+                                            <div class="no-image-placeholder" 
+                                                 style="width: 60px; height: 60px; background-color: #f8f9fa; border: 1px solid #ddd; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                                <i class="fas fa-image text-muted"></i>
+                                            </div>
+                                        }
+                                    </td>
+                                    <td>@Html.DisplayFor(modelItem => item.TenSp)</td><td>
                                         @if (!string.IsNullOrEmpty(item.MoTa) && item.MoTa.Length > 50)
                                         {
                                             <span>@(item.MoTa.Substring(0, 50))...</span>

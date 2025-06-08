@@ -140,13 +140,11 @@ namespace WebBanHang215.Areas.admin.Controllers
             ViewBag.MaGioiTinh = new SelectList(_context.GioiTinhs, "MaGioiTinh", "TenGioiTinh");
 
             return View();
-        }
-
-        // Xử lý thêm mới
+        }        // Xử lý thêm mới
         [HttpPost]
         [Route("ThemSanPhamMoi")]
         [ValidateAntiForgeryToken]
-        public IActionResult ThemSanPhamMoi(SanPhamCreateViewModel vm)
+        public async Task<IActionResult> ThemSanPhamMoi(SanPhamCreateViewModel vm)
         {
             if (!ModelState.IsValid)
             {
@@ -175,8 +173,51 @@ namespace WebBanHang215.Areas.admin.Controllers
             };
 
             _context.SanPhams.Add(sp);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync(); // Use async to get the generated MaSp
 
+            // Handle image uploads if any
+            if (vm.AnhSanPham != null && vm.AnhSanPham.Any())
+            {
+                foreach (var file in vm.AnhSanPham)
+                {
+                    if (file != null && file.Length > 0)
+                    {
+                        var fileName = Path.GetFileName(file.FileName);
+                        
+                        // Create unique filename to avoid conflicts
+                        var uniqueFileName = $"{Guid.NewGuid()}_{fileName}";
+
+                        // Đường dẫn lưu ảnh vật lý trong wwwroot/productsImages
+                        var savePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "productsImages", uniqueFileName);
+
+                        // Tạo thư mục nếu chưa có
+                        var directory = Path.GetDirectoryName(savePath);
+                        if (!Directory.Exists(directory))
+                        {
+                            Directory.CreateDirectory(directory!);
+                        }
+
+                        // Ghi file
+                        using (var stream = new FileStream(savePath, FileMode.Create))
+                        {
+                            await file.CopyToAsync(stream);
+                        }
+
+                        // Lưu URL vào DB (dùng trong <img src="...">)
+                        var anh = new AnhSanPham
+                        {
+                            MaSp = sp.MaSp, // Now we have the generated MaSp
+                            Url = "/productsImages/" + uniqueFileName
+                        };
+
+                        _context.AnhSanPhams.Add(anh);
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+            }
+
+            TempData["SuccessMessage"] = "Thêm sản phẩm mới thành công!";
             return RedirectToAction("DanhMucSanPham");
         }
 
